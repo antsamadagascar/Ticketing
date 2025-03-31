@@ -1,0 +1,30 @@
+Application:Ticketing
+Langage:java
+web-framework: fait maison(sprint)
+base:PostgreSQL
+ 
+I-backoffice:
+-connéxion protegé par login/mot de passe 
+-Crud vol(ajoute,edit,update)
+-Recherche multicritère vol 
+-Regles de gestions a appliquer dans backoffice:
+	.Paramétrage:
+	   -Promotion par vol:
+		Définition nombre siège par classe en promotion(%)
+	   -Resérvation(nombre heure avant vol):
+	   	Définition des heures de vol
+	   -Annulation reservation(nombre heures de possibilités  d'annulation vol apres resérvation)
+	   	Critere de nombre heure
+		
+II-FRONTOFFICE:
+-Recherche multicritère vol.
+-Resérvation vol.
+
+III-BASE:
+conception:
+	.Avion:id,modele,siège business,siège economique,date de fabrication
+	.Ville desservie
+	.vol
+	.User
+	.Type siège
+	.Reservation
