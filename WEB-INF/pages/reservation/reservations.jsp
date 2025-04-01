@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         .page-container {
-            max-width: 1200px;
+            max-width: 1200px;  
             margin: 0 auto;
             padding: 2rem;
             margin-top: 50px;

@@ -408,7 +408,7 @@
                                         <th>Type de siège</th>
                                         <th>Prix</th>
                                         <th>Promotion</th>
-                                        <th>Actions</th>
+                                      <!--<th>Actions</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -431,19 +431,28 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <% if (vol.isEstEnPromotion()) { %>
+                                                <%
+                                                    Boolean estEnPromo = vol.isEstEnPromotion();
+                                                    if (estEnPromo != null && estEnPromo) {
+                                                %>
                                                     <span class="badge badge-success">
-                                                        <i class="fas fa-percentage"></i> Promotion
+                                                       En promotion
                                                     </span>
-                                                <% } else { %>
-                                                    <span class="badge badge-secondary">Non</span>
-                                                <% } %>
+                                                <%
+                                                    } else {
+                                                %>
+                                                    <span class="badge badge-secondary">Pas en promotion</span>
+                                                <%
+                                                    }
+                                                %>
                                             </td>
-                                            <td>
+                                            
+                                           <!--<td>
                                                 <button class="btn btn-primary" style="padding: 0.5rem 0.75rem; font-size: 0.875rem;">
                                                     <i class="fas fa-ticket-alt"></i> Réserver
                                                 </button>
                                             </td>
+                                        -->
                                         </tr>
                                     <% } %>
                                 </tbody>

@@ -38,7 +38,7 @@ public class RechercheController {
         mv.add("typesSiege", typesSiege);
         
         mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
-        mv.add("pageContent", "/WEB-INF/pages/recherche/recherche-combined.jsp"); // Nouveau fichier
+        mv.add("pageContent", "/WEB-INF/pages/recherche/recherche-combined.jsp"); 
         return mv;
     }
 
@@ -87,6 +87,5 @@ public class RechercheController {
         mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
         mv.add("pageContent", "/WEB-INF/pages/recherche/recherche-combined.jsp"); 
         return mv;
-        }
-        
+        } 
 }

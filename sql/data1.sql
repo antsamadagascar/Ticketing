@@ -95,3 +95,14 @@ INSERT INTO detail_reservation (reservation_id, siege_vol_id, prix_unitaire, pas
 
 -- Vérifier le montant_total (mis à jour par le trigger)
 SELECT montant_total FROM reservation WHERE id = 1; -- Devrait retourner 2312.00
+
+INSERT INTO promotion_vol (vol_id, type_siege_id, taux_promotion, date_debut, date_fin) VALUES
+(1, 2, 10, '2023-12-01 00:00:00', '2023-12-31 23:59:59'); 
+
+INSERT INTO regle_reservation (heures_avant_vol, active) VALUES
+(24, TRUE); 
+
+INSERT INTO regle_annulation (heures_apres_reservation, active) VALUES
+(24, TRUE); 
+
+Insert into regle_prix (age_min,age_max,pourcentage_prix)  values (5,13,30);
