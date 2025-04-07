@@ -4,10 +4,8 @@ import dao.PromotionVolDAO;
 import dao.TypeSiegeDAO;
 import dao.VolDao;
 import exception.ValidationError;
-import models.Avion;
 import models.PromotionVol;
 import models.TypeSiege;
-import models.Ville;
 import models.Vol;
 import other.ModelView;
 
