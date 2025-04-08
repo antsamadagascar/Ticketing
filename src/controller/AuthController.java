@@ -12,7 +12,6 @@ import other.ModelView;
 import other.MySession;
 import exception.ValidationException;
 import annotation.ValidateForm;
-import annotation.auth.Authentification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Controller("AuthController")
