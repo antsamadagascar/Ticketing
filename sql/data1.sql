@@ -6,10 +6,22 @@ VALUES
 
 INSERT INTO avion (modele, date_fabrication) VALUES
 ('Boeing 737', '2020-01-15');
+-- ('Airbus A320','2019-08-23'),
+-- ('Boeing 787-9','2017-11-05'),
+-- ('Airbus A330-300', '2016-03-17'),
+-- ('Embraer E190','2020-01-08');
 
 INSERT INTO ville (nom, code_aeroport, pays, fuseau_horaire) VALUES
 ('Paris', 'CDG', 'France', 'Europe/Paris'),
 ('New York', 'JFK', 'États-Unis', 'America/New_York');
+-- ('Tokyo', 'HND', 'Japon', 'Asia/Tokyo'),
+-- ('Casablanca', 'CMN', 'Maroc', 'Africa/Casablanca'),
+-- ('Dubai', 'DXB', 'Émirats Arabes Unis', 'Asia/Dubai'),
+-- ('Londres', 'LHR', 'Royaume-Uni', 'Europe/London'),
+-- ('Madrid', 'MAD', 'Espagne', 'Europe/Madrid'),
+-- ('Rome', 'FCO', 'Italie', 'Europe/Rome'),
+-- ('Berlin', 'BER', 'Allemagne', 'Europe/Berlin'),
+-- ('Istanbul', 'IST', 'Turquie', 'Europe/Istanbul');
 
 INSERT INTO type_siege (nom, description, tarif_base) VALUES
 ('Économique', 'Siège standard avec confort de base', 200.00),
