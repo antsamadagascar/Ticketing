@@ -4,9 +4,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 import models.Passager;
 import utils.connection.PostgresConnection;
-import java.util.logging.Logger;
 
 public class PassagerDao {
 
@@ -91,7 +91,7 @@ public class PassagerDao {
                 int reservationId = rs.getInt("reservation_id");
                 String fileName = rs.getString("passeport_file_data");
 
-                return String.format("C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\Ticketing\\upload\\utilisateur_%d\\vol_%d\\reservation_%d\\passager_%d\\%s",
+                return String.format("C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\data_reservation_ticketing\\utilisateur_%d\\vol_%d\\reservation_%d\\passager_%d\\%s",
                         utilisateurId, volId, reservationId, passagerId, fileName);
             }
         }

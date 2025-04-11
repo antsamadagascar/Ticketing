@@ -135,7 +135,7 @@ public class ReservationController {
     }
 
     public String saveFile(FileUpload fileUpload, int userId, int volId, int reservationId, int passagerId) throws IOException {
-        String userFolder = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\Ticketing\\upload\\utilisateur_" + userId;
+        String userFolder = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\data_reservation_ticketing\\utilisateur_" + userId;
         Files.createDirectories(Paths.get(userFolder));
         String volFolder = userFolder + "\\vol_" + volId;
         Files.createDirectories(Paths.get(volFolder));
