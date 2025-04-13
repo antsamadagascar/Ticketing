@@ -45,7 +45,7 @@
                     <div class="mb-6">
                         <div class="flex justify-between items-center mb-2">
                             <label for="password" class="block text-gray-700 font-semibold">Password</label>
-                            <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                           <!--<a href="#" class="text-sm text-indigo-600 hover:text-indigo-500">Forgot password?</a> -->
                         </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -74,9 +74,11 @@
                 </form>
             </div>
         </div>
+        <!--
         <div class="text-center mt-6">
             <p class="text-white">Don't have an account? <a href="#" class="font-semibold text-white hover:text-indigo-200 transition duration-300">Create an account</a></p>
         </div>
+    -->
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

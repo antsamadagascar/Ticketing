@@ -24,7 +24,7 @@ public class RegleReservationDAO {
                 regles.add(regle);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Gère les erreurs
+            e.printStackTrace();
         }
 
         return regles;
