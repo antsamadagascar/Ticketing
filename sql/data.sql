@@ -1,8 +1,8 @@
 INSERT INTO utilisateur (email, mot_de_passe, nom, prenom, date_naissance, telephone, role, date_creation) 
 VALUES 
-('admin@gmail.com', '1234', 'Admin', 'Randria','Hasina' , '1234567890', 'manager', NOW()),
-('antsamadagascar@gmail.com', '1234', 'Ratovonandrasana', 'Aina Ny Antsa', NULL, '0987654321', 'user', NOW()),
-('Stephanie@gmail.com', '1234', 'Mirana', 'Aina', NULL, '1122334455', 'user', NOW());
+('antsamadagascar@gmail.com', crypt('1234', gen_salt('bf')), 'Ratovonandrasana', 'Aina Ny Antsa','2005-07-29' , '1234567890', 'manager', NOW()),
+('landy@gmail.com', crypt('1234', gen_salt('bf')), 'raisoa', 'landy', NULL, '0987654321', 'user', NOW()),
+('ivo@gmail.com', crypt('1234', gen_salt('bf')), 'kilonga', 'mihary', NULL, '1122334455', 'user', NOW());
 
 INSERT INTO avion (modele,date_fabrication) VALUES
 ('Boeing 737-800', '2018-05-12'),
@@ -51,5 +51,6 @@ INSERT INTO regle_reservation (heures_avant_vol, active) VALUES
 (24, TRUE); 
 
 INSERT INTO regle_annulation (heures_apres_reservation, active) VALUES
-(48, TRUE); 
+(24, TRUE); 
 
+Insert into regle_prix (age_min,age_max,pourcentage_prix)  values (5,13,30);

@@ -163,4 +163,30 @@ public class ReservationDao {
         }
         throw new SQLException("Impossible de générer un ID de réservation");
     }
+
+    public int getHeuresAnnulation() throws SQLException {
+        String sql = "SELECT heures_apres_reservation FROM regle_annulation WHERE active = TRUE LIMIT 1";
+        try (Connection conn = PostgresConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("heures_apres_reservation");
+            }
+            return 1; 
+        }
+    }
+
+    public int getHeuresReservation() throws SQLException {
+        String sql = "SELECT heures_avant_vol FROM regle_reservation WHERE active = TRUE";
+        try (Connection conn = PostgresConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("heures_avant_vol");
+            }
+            return 1; 
+        }
+    }
+
 }
+

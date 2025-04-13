@@ -2,6 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="models.Vol" %>
 <%@ page import="models.SiegeVol" %>
+<%@ page import="models.Reservation" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,13 +23,26 @@
 }
 */
 /* Reset et styles généraux */
+.success {
+  background-color: rgba(46, 204, 113, 0.2);
+  border-left: 4px solid var(--success);
+  color: #27ae60;
+}
+        
+
+.error {
+  background-color: rgba(231, 76, 60, 0.2);
+  border-left: 4px solid var(--danger);
+  color: #c0392b;
+}
+        
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 
 
 /* En-tête */
@@ -246,38 +260,58 @@ form {
     </script>
 </head>
 <body>
-    <h2>Réserver un vol</h2>
-   
-    <form action="${pageContext.request.contextPath}/reservation/valider" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="volSelect">Vol :</label>
-            <select id="volSelect" name="volId" onchange="chargerSieges()">
-                <option value="">Sélectionnez un vol</option>
-                <% List<Vol> vols = (List<Vol>) request.getAttribute("vols"); %>
-                <% if(vols != null) { %>
-                    <% for (Vol vol : vols) { %>
-                        <option value="<%= vol.getId() %>"><%= vol.getNumeroVol() %> - <%= vol.getVilleDepart().getNom() %> <%= vol.getVilleArrivee() != null ? "→ " + vol.getVilleArrivee().getNom() : "" %></option>
-                    <% } %>
-                <% } %>
-            </select>
-        </div>
-       
-        <div class="form-group">
-            <label for="siegeSelect">Siège :</label>
-            <select id="siegeSelect" name="siegeId" required>
-                <option value="">Sélectionnez d'abord un vol</option>
-            </select>
-        </div>
-       
-        <div class="form-group">
-            <label for="nombrePassagers">Nombre de passagers :</label>
-            <input type="number" id="nombrePassagers" name="nombrePassagers" min="1" max="5" value="1" required>
-        </div>
-        <label for="passeport">Passeport :</label>
-        <input type="file" name="passeport" id="passeport" required>
-        <button type="submit">Réserver maintenant</button>
-    </form>
-    
-    <div id="debug"></div>
+  <h2>Réserver un vol</h2>
+
+  <form action="${pageContext.request.contextPath}/reservation/valider" method="post" enctype="multipart/form-data">
+    <%
+    String messageSuccess = (String) request.getAttribute("messageSuccess");
+    String messageError = (String) request.getAttribute("messageError");
+    %>
+    <% if (messageSuccess != null) { %>
+      <div class="alert success"><%= messageSuccess %></div>
+    <% } %>
+    <% if (messageError != null) { %>
+      <div class="alert error"><%= messageError %></div>
+    <% } %>  
+    <div class="form-group">
+          <label for="volSelect">Vol :</label>
+          <select id="volSelect" name="volId" onchange="chargerSieges()">
+              <option value="">Sélectionnez un vol</option>
+              <%
+                  List<Vol> vols = (List<Vol>) request.getAttribute("vols");
+                  if (vols != null) {
+                      for (Vol vol : vols) {
+              %>
+                  <option value="<%= vol.getId() %>">
+                      <%= vol.getNumeroVol() %> - <%= vol.getVilleDepart().getNom() %>
+                      <%= (vol.getVilleArrivee() != null ? "→ " + vol.getVilleArrivee().getNom() : "") %>
+                  </option>
+              <%
+                      }
+                  }
+              %>
+          </select>
+      </div>
+
+      <div class="form-group">
+          <label for="siegeSelect">Siège :</label>
+          <select id="siegeSelect" name="siegeId" required>
+              <option value="">Sélectionnez d'abord un vol</option>
+          </select>
+      </div>
+
+      <div class="form-group">
+          <label for="nombrePassagers">Nombre de passagers :</label>
+          <input type="number" id="nombrePassagers" name="nombrePassagers" min="1" max="5" value="1" required>
+      </div>
+
+      <label for="passeport">Passeport :</label>
+      <input type="file" name="passeport" id="passeport" required>
+
+      <button type="submit">Réserver maintenant</button>
+  </form>
+
+  <div id="debug"></div>
 </body>
+
 </html>

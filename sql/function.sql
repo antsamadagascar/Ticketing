@@ -216,3 +216,30 @@ CREATE TRIGGER trigger_recuperer_prix_unitaire
 BEFORE INSERT ON detail_reservation
 FOR EACH ROW
 EXECUTE FUNCTION recuperer_prix_unitaire();
+
+---
+-- 8. Fonction pour recuperer liberer les siege apres annulation
+---
+CREATE OR REPLACE FUNCTION liberer_sieges_apres_annulation()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Si la réservation est annulée (statut passe à FALSE)
+    IF OLD.statut = TRUE AND NEW.statut = FALSE THEN
+        -- Mettre à jour tous les sièges associés dans siege_vol pour les rendre disponibles
+        UPDATE siege_vol
+        SET est_disponible = TRUE
+        WHERE id IN (
+            SELECT dr.siege_vol_id
+            FROM detail_reservation dr
+            WHERE dr.reservation_id = NEW.id
+        );
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_liberer_sieges_apres_annulation
+AFTER UPDATE ON reservation
+FOR EACH ROW
+EXECUTE FUNCTION liberer_sieges_apres_annulation();

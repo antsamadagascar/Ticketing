@@ -46,7 +46,6 @@ CREATE TABLE vol (
     CONSTRAINT check_statut CHECK (statut IN (0, 1, -1))
 );
 
-
 CREATE TABLE siege_vol (
     id SERIAL PRIMARY KEY,
     vol_id INTEGER NOT NULL REFERENCES vol(id) ON DELETE CASCADE,
@@ -109,4 +108,11 @@ CREATE TABLE regle_annulation (
     id SERIAL PRIMARY KEY,
     heures_apres_reservation INTEGER NOT NULL, 
     active BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE regle_prix (
+    id SERIAL PRIMARY KEY,
+    age_min INTEGER not null,
+    age_max INTEGER not null,
+    pourcentage_prix DECIMAL(10,2)
 );
