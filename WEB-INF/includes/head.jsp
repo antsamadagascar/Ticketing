@@ -28,6 +28,6 @@
     <script src="<%= request.getContextPath() %>/assets/js/buttons/2.3.6/buttons.html5.min.js"></script>
 
 <!-- Template Main CSS File -->
-<link href="${pageContext.request.contextPath}/template/assets/css/tailwind.min.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/assets/css/tailwind.min.css" rel="stylesheet">
 
 </head>
