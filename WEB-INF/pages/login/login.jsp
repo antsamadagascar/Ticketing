@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Espace Login</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <script src="${pageContext.request.contextPath}/template/assets/css/3.4.16"></script>
+    <script src="${pageContext.request.contextPath}/assets/css/3.4.16"></script>
     <style>
         .login-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
