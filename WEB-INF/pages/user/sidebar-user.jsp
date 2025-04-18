@@ -10,7 +10,7 @@
             </div>
             <div class="offcanvas-body">
                 <div class="sidebar-header d-flex flex-column align-items-center py-4">
-                    <img src="${pageContext.request.contextPath}/template/assets/logos/flight.png" alt="Logo" class="img-fluid mb-2" style="max-height: 60px;">
+                    <img src="${pageContext.request.contextPath}/assets/logos/flight.png" alt="Logo" class="img-fluid mb-2" style="max-height: 60px;">
                     <h5 class="mb-0">Air Ticket</h5>
                 </div>
                 
