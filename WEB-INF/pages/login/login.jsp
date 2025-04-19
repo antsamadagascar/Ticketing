@@ -4,100 +4,294 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Espace Login</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/assets/css/all.min.css" rel="stylesheet">
     <script src="${pageContext.request.contextPath}/assets/css/3.4.16"></script>
     <style>
-        .login-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f7f9fc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 40px 30px;
+            border: 1px solid #e1e8ed;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-icon {
+            width: 60px;
+            height: 60px;
+            background: #4a90e2;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 24px;
+        }
+        
+        .login-title {
+            font-size: 24px;
+            color: #2c3e50;
+            font-weight: 400;
+            margin: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            color: #34495e;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            border: 2px solid #e1e8ed;
+            border-radius: 6px;
+            font-size: 16px;
+            background: white;
+            transition: border-color 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+        
+        .password-toggle:hover {
+            color: #4a90e2;
+            background: rgba(74, 144, 226, 0.1);
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .login-button {
+            width: 100%;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .login-button:hover:not(:disabled) {
+            background: #357abd;
+        }
+        
+        .login-button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .loading-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        
+        .loading-spinner.show {
+            display: block;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+        }
+        
+        /* Accessibility */
+        .form-input:focus,
+        .password-toggle:focus,
+        .login-button:focus {
+            outline: 2px solid #4a90e2;
+            outline-offset: 2px;
         }
     </style>
 </head>
-<body class="login-bg min-h-screen flex items-center justify-center px-4 py-8">
-    <div class="w-full max-w-md">
-        <div class="bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-all duration-300 hover:scale-105">
-            <div class="p-8">
-                <div class="flex justify-center mb-6">
-                    <div class="w-24 h-24 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
-                        <i class="fas fa-globe text-4xl text-white"></i>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h1 class="login-title">Connexion</h1>
+            </div>
+            
+            <% if (request.getAttribute("error") != null) { %>
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <%= request.getAttribute("error") %>
+                </div>
+            <% } %>
+            
+            <form action="${pageContext.request.contextPath}/auth/login" method="post" id="loginForm">
+                <div class="form-group">
+                    <label for="username" class="form-label">Email ou nom d'utilisateur</label>
+                    <div class="input-container">
+                        <i class="fas fa-user input-icon"></i>
+                        <input 
+                            type="email" 
+                            id="username" 
+                            name="email" 
+                            class="form-input" 
+                            placeholder="Entrez votre email"
+                            value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>"
+                            autocomplete="username" 
+                            autofocus
+                            required
+                        >
                     </div>
+                    <% if (request.getAttribute("emailError") != null) { %>
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <%= request.getAttribute("emailError") %>
+                        </div>
+                    <% } %>
                 </div>
                 
-                <h2 class="text-center text-3xl font-extrabold text-gray-800 mb-6">
-                  Login
-                </h2>
+                <div class="form-group">
+                    <label for="password" class="form-label">Mot de passe</label>
+                    <div class="input-container">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input" 
+                            placeholder="Entrez votre mot de passe"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Afficher le mot de passe">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <% if (request.getAttribute("motDePasseError") != null) { %>
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <%= request.getAttribute("motDePasseError") %>
+                        </div>
+                    <% } %>
+                </div>
                 
-                <% if (request.getAttribute("error") != null) { %>
-                        <p class="text-red-500 text-sm mt-2 flex items-center"><i class="fas fa-info-circle mr-2"></i><%= request.getAttribute("error") %></p>
-                <% } %>
-                <form action="${pageContext.request.contextPath}/auth/login" method="post" id="loginForm">
-                    <div class="mb-4">
-                        <label for="username" class="block text-gray-700 font-semibold mb-2">Username or Email</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-user text-gray-400"></i>
-                            </div>
-                            <input type="email" id="username" name="email" class="w-full pl-10 pr-3 py-3 border-2 rounded-lg focus:outline-none focus:border-indigo-500 transition duration-300" placeholder="Enter your username or email" value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>" autocomplete="username" autofocus>
-                        </div>
-                        <% if (request.getAttribute("emailError") != null) { %>
-                            <p class="text-red-500 text-sm mt-2 flex items-center"><i class="fas fa-info-circle mr-2"></i><%= request.getAttribute("emailError") %></p>
-                        <% } %>
-                    </div>
-                    <div class="mb-6">
-                        <div class="flex justify-between items-center mb-2">
-                            <label for="password" class="block text-gray-700 font-semibold">Password</label>
-                           <!--<a href="#" class="text-sm text-indigo-600 hover:text-indigo-500">Forgot password?</a> -->
-                        </div>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-gray-400"></i>
-                            </div>
-                            <input type="password" id="password" name="password" class="w-full pl-10 pr-10 py-3 border-2 rounded-lg focus:outline-none focus:border-indigo-500 transition duration-300" placeholder="Enter your password" autocomplete="current-password">
-                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                <button type="button" id="togglePassword" class="text-gray-400 hover:text-gray-600">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <% if (request.getAttribute("motDePasseError") != null) { %>
-                            <p class="text-red-500 text-sm mt-2 flex items-center"><i class="fas fa-info-circle mr-2"></i><%= request.getAttribute("motDePasseError") %></p>
-                        <% } %>
-                    </div>
-                    <button type="submit" id="submitButton" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center">
-                        <span id="spinner" class="mr-3 hidden">
-                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                        </span>
-                        <span id="buttonText">Sign In</span>
-                    </button>
-                </form>
-            </div>
+                <button type="submit" class="login-button" id="submitButton">
+                    <div class="loading-spinner" id="spinner"></div>
+                    <span id="buttonText">Se connecter</span>
+                </button>
+            </form>
         </div>
-        <!--
-        <div class="text-center mt-6">
-            <p class="text-white">Don't have an account? <a href="#" class="font-semibold text-white hover:text-indigo-200 transition duration-300">Create an account</a></p>
-        </div>
-    -->
     </div>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
+            const form = document.getElementById('loginForm');
             const submitButton = document.getElementById('submitButton');
             const spinner = document.getElementById('spinner');
             const buttonText = document.getElementById('buttonText');
             const passwordInput = document.getElementById('password');
-            const togglePassword = document.getElementById('togglePassword');
-            loginForm.addEventListener('submit', function() {
+            const toggleButton = document.getElementById('togglePassword');
+            
+            // Gestion de la soumission du formulaire
+            form.addEventListener('submit', function() {
                 submitButton.disabled = true;
-                spinner.classList.remove('hidden');
-                buttonText.textContent = 'Signing In...';
+                spinner.classList.add('show');
+                buttonText.textContent = 'Connexion en cours...';
             });
-            togglePassword.addEventListener('click', function() {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                this.querySelector('i').classList.toggle('fa-eye');
-                this.querySelector('i').classList.toggle('fa-eye-slash');
+            
+            // Toggle du mot de passe
+            toggleButton.addEventListener('click', function() {
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
+                
+                const icon = this.querySelector('i');
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+                
+                this.setAttribute('aria-label', isPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe');
             });
         });
     </script>
