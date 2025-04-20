@@ -8,215 +8,197 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Réservations</title>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #3a7bd5;
-            --primary-light: #4d90fe;
-            --secondary: #00d2ff;
-            --dark: #333;
+            --primary: #4a6fa5;
+            --primary-dark: #365986;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
             --light: #f8f9fa;
-            --danger: #e74c3c;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --gray-light: #f1f1f1;
-            --gray: #ddd;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --dark: #343a40;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
- 
-        
+
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+
         h2 {
             color: var(--primary);
-            margin-bottom: 30px;
-            font-weight: 600;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-200);
             text-align: center;
-            position: relative;
-            padding-bottom: 15px;
+            font-size: 28px;
         }
-        
-        h2:after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            height: 4px;
-            width: 60px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            border-radius: 2px;
-        }
-        
+
         .alert {
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
             font-weight: 500;
         }
-        
-        .alert:before {
-            margin-right: 10px;
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-        }
-        
+
         .success {
-            background-color: rgba(46, 204, 113, 0.2);
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success);
             border-left: 4px solid var(--success);
-            color: #27ae60;
         }
-        
-        .success:before {
-            content: '\f058'; /* check-circle */
-        }
-        
+
         .error {
-            background-color: rgba(231, 76, 60, 0.2);
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
             border-left: 4px solid var(--danger);
-            color: #c0392b;
         }
-        
-        .error:before {
-            content: '\f06a'; /* exclamation-circle */
-        }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
-        
+
         th, td {
-            padding: 16px;
+            padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid var(--gray);
+            border-bottom: 1px solid var(--gray-300);
         }
-        
+
         th {
             background-color: var(--primary);
             color: white;
             font-weight: 500;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
         }
-        
-        tr:nth-child(even) {
-            background-color: var(--gray-light);
-        }
-        
+
         tr:hover {
-            background-color: rgba(58, 123, 213, 0.1);
+            background-color: var(--gray-100);
         }
-        
-        img {
-            border-radius: 6px;
-            border: 2px solid var(--gray);
-            transition: transform 0.3s ease;
-            object-fit: cover;
+
+        .no-reservations {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--secondary);
+            font-size: 18px;
         }
-        
-        img:hover {
-            transform: scale(1.1);
-        }
-        
+
         .cancel-btn {
             background-color: var(--danger);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 8px 12px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            transition: background-color 0.3s;
         }
-        
-        .cancel-btn:before {
-            content: '\f2ed'; /* trash-alt */
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            margin-right: 8px;
-        }
-        
+
         .cancel-btn:hover {
-            background-color: #c0392b;
+            background-color: #bd2130;
         }
-        
-        .no-reservations {
-            text-align: center;
-            padding: 40px;
-            color: #7f8c8d;
-            font-size: 1.2rem;
+
+        .pdf-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 5px;
         }
-        
-        .no-reservations:before {
-            content: '\f187'; /* archive */
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            display: block;
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: var(--gray);
+
+        .pdf-btn:hover {
+            background-color: var(--primary-dark);
         }
-        
-        @media screen and (max-width: 992px) {
+
+        .action-column {
+            display: flex;
+            gap: 5px;
+        }
+
+        .status-confirmed {
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .status-cancelled {
+            color: var(--danger);
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
             .container {
-                padding: 20px;
+                width: 95%;
+                padding: 15px;
             }
             
             table {
                 display: block;
                 overflow-x: auto;
-                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            th, td {
+                padding: 10px;
             }
             
-            th, td {
-                padding: 12px;
+            h2 {
+                font-size: 24px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Mes Réservations</h2>
+        <h2><i class="fas fa-ticket-alt"></i> Mes Réservations</h2>
        
         <%
             List<Reservation> reservations = (List<Reservation>) request.getAttribute("reservations");
-            if (reservations != null && !reservations.isEmpty()) {
+            String messageSuccess = (String) request.getAttribute("messageSuccess");
+            String messageError = (String) request.getAttribute("messageError");
+            
+            if (messageSuccess != null) {
         %>
-        <% String messageSuccess = (String) request.getAttribute("messageSuccess"); %>
-        <% String messageError = (String) request.getAttribute("messageError"); %>
-        <% if (messageSuccess != null) { %>
-            <div class="alert success"><%= messageSuccess %></div>
+            <div class="alert success"><i class="fas fa-check-circle"></i> <%= messageSuccess %></div>
         <% } %>
+        
         <% if (messageError != null) { %>
-            <div class="alert error"><%= messageError %></div>
+            <div class="alert error"><i class="fas fa-exclamation-circle"></i> <%= messageError %></div>
         <% } %>
+
+        <% if (reservations != null && !reservations.isEmpty()) { %>
         <table>
             <tr>
-                <th>ID Réservation</th>
-                <th>Montant Total</th>
-                <th>Date de Réservation</th>
-                <th>Statut</th>
-                <th>Numéro de Vol</th>
-                <th>Date Départ</th>
-                <th>Date Arrivée</th>
-                <th>Passeport</th>
-                <th>Action</th>
+                <th><i class="fas fa-hashtag"></i> ID</th>
+                <th><i class="fas fa-euro-sign"></i> Montant</th>
+                <th><i class="far fa-calendar-alt"></i> Date Réservation</th>
+                <th><i class="fas fa-plane"></i> N° Vol</th>
+                <th><i class="fas fa-plane-departure"></i> Départ</th>
+                <th><i class="fas fa-plane-arrival"></i> Arrivée</th>
+                <th><i class="fas fa-users"></i> Passagers</th>
+                <th><i class="fas fa-info-circle"></i> Statut</th>
+                <th><i class="fas fa-cogs"></i> Actions</th>
             </tr>
             <%
                 for (Reservation r : reservations) {
@@ -226,42 +208,38 @@
                 <td><%= r.getId() %></td>
                 <td><%= r.getMontantTotal() %> €</td>
                 <td><%= r.getDateReservation() %></td>
+                <td><%= vol.getNumeroVol() %></td>
+                <td><%= vol.getDateDepart() %></td>
+                <td><%= vol.getDateArrivee() %></td>
+                <td><%= r.getNombrePassager() %></td>
                 <td>
                     <% if (r.isStatut()) { %>
-                        <span style="color: var(--success); font-weight: 500;">
+                        <span class="status-confirmed">
                             <i class="fas fa-check-circle"></i> Confirmée
                         </span>
                     <% } else { %>
-                        <span style="color: var(--danger); font-weight: 500;">
+                        <span class="status-cancelled">
                             <i class="fas fa-times-circle"></i> Annulée
                         </span>
                     <% } %>
                 </td>
-                <td><%= vol.getNumeroVol() %></td>
-                <td><%= vol.getDateDepart() %></td>
-                <td><%= vol.getDateArrivee() %></td>
-                <td>
-                    <% if (r.getPassFileUpload() != null) { %>
-                        <img src="<%= r.getPassFileUpload() != null ? r.getPassFileUpload().getFilePath() : "" %>" width="100" height="100" alt="Passeport">
-                    <% } else { %>
-                        <span style="color: var(--warning);">
-                            <i class="fas fa-exclamation-triangle"></i> Aucun passeport
-                        </span>
-                    <% } %>
-                </td>
-                <td>
+                <td class="action-column">
+                    <a href="http://localhost:8080/reservations/pdf/<%= r.getId() %>" class="pdf-btn" title="Télécharger PDF">
+                        <i class="fas fa-file-pdf"></i> PDF
+                    </a>
                     <% if (r.isStatut()) { %>
                         <form action="/Ticketing/reservation/annuler" method="post">
                             <input type="hidden" name="reservationId" value="<%= r.getId() %>">
-                            <button type="submit" class="cancel-btn">Annuler</button>
+                            <button type="submit" class="cancel-btn" title="Annuler la réservation">
+                                <i class="fas fa-ban"></i> Annuler
+                            </button>
                         </form>
                     <% } %>
                 </td>
             </tr>
-            <%
-                }
-            %>
+            <% } %>
         </table>
+<<<<<<< Updated upstream
         <%
             } else {
         %>
@@ -270,3 +248,31 @@
             }
         %>
     </div>
+=======
+        <% } else { %>
+        <div class="no-reservations">
+            <i class="fas fa-search"></i>
+            <p>Aucune réservation trouvée.</p>
+        </div>
+        <% } %>
+    </div>
+
+    <script>
+        // Add fade effect to alerts
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.transition = 'opacity 1s';
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        alert.style.display = 'none';
+                    }, 1000);
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>
+>>>>>>> Stashed changes
