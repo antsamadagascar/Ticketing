@@ -202,15 +202,45 @@ FOR EACH ROW
 EXECUTE FUNCTION calculer_montant_total();
 
 ---
---  7. Fonction pour recuperer les prix unitaire d'un siege (Ok0)
+--  7. Fonction pour recuperer les prix unitaire d'un siege (Ok)
 ---
+
 CREATE OR REPLACE FUNCTION recuperer_prix_unitaire()
 RETURNS TRIGGER AS $$
+DECLARE
+    age_passager INTEGER;
+    pourcentage_prix DECIMAL(10, 2);
+    prix_base_siege DECIMAL(10, 2);
+    date_depart_vol TIMESTAMP;
 BEGIN
-    NEW.prix_unitaire := (SELECT prix_final FROM siege_vol WHERE id = NEW.siege_vol_id);
+    SELECT v.date_depart INTO date_depart_vol
+    FROM reservation r
+    JOIN vol v ON r.vol_id = v.id
+    WHERE r.id = (SELECT reservation_id FROM passager WHERE id = NEW.passager_id);
+
+    SELECT EXTRACT(YEAR FROM AGE(date_depart_vol, p.date_naissance)) INTO age_passager
+    FROM passager p
+    WHERE p.id = NEW.passager_id;
+
+    SELECT prix_final INTO prix_base_siege
+    FROM siege_vol
+    WHERE id = NEW.siege_vol_id;
+
+    SELECT regle_prix.pourcentage_prix INTO pourcentage_prix
+    FROM regle_prix
+    WHERE age_passager BETWEEN age_min AND age_max
+    LIMIT 1;
+
+    IF pourcentage_prix IS NULL THEN
+        pourcentage_prix := 100.00;
+    END IF;
+
+    NEW.prix_unitaire := prix_base_siege * (pourcentage_prix / 100.00);
+
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE TRIGGER trigger_recuperer_prix_unitaire
 BEFORE INSERT ON detail_reservation
