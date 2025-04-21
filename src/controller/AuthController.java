@@ -13,6 +13,7 @@ import other.MySession;
 import exception.ValidationException;
 import annotation.ValidateForm;
 import annotation.auth.Authentification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Controller("AuthController")
 public class AuthController {
@@ -42,8 +43,10 @@ public class AuthController {
             validator.validateObject(tempUser);
             
             List<Utilisateur> utilisateurs = userDAO.getAll();
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
             Utilisateur user = utilisateurs.stream()
-                .filter(u -> u.getEmail().equals(email) && u.getMotDePasse().equals(password))
+                .filter(u -> u.getEmail().equals(email) && encoder.matches(password, u.getMotDePasse()))
                 .findFirst()
                 .orElse(null);
             
@@ -73,7 +76,7 @@ public class AuthController {
         
         return mv;
     }
-   
+
     @Url("/logout")
     @Get
     public ModelView logout(MySession session) {

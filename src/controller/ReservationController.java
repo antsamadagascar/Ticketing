@@ -81,14 +81,20 @@ public class ReservationController {
     @Post
     public ModelView annulerReservation(@Param(name = "reservationId") int reservationId, MySession session) {
         ModelView mv = new ModelView();
-        
+    
+        if (reservationId <= 0) {
+            mv.add("messageError", "ID de réservation invalide.");
+            mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
+            mv.add("pageContent", "/WEB-INF/pages/reservation/mes-reservation.jsp");
+            return mv;
+        }
+    
         Object authUser = session.get("authUser");
         if (authUser instanceof Utilisateur) {
             Utilisateur utilisateur = (Utilisateur) authUser;
             
             try {
                 boolean success = reservationDao.annulerReservation(reservationId, utilisateur.getId());
-    
                 if (success) {
                     mv.add("messageSuccess", "La réservation a été annulée avec succès.");
                 } else {
@@ -96,11 +102,6 @@ public class ReservationController {
                 }
             } catch (SQLException e) {
                 String erreurMessage = e.getMessage();
-<<<<<<< Updated upstream
-                
-                if (erreurMessage.contains("L'annulation doit être faite")) {
-                    mv.add("messageError", erreurMessage);
-=======
                 System.out.println("SQLException message: " + erreurMessage); 
                 if (erreurMessage.toLowerCase().contains("annulation doit")) {
                     try {
@@ -113,12 +114,19 @@ public class ReservationController {
                     }
                 } else {
                     mv.add("messageError", "Une erreur de base de données s'est produite lors de l'annulation.");
->>>>>>> Stashed changes
                 }
+            } catch (Exception e) {
+                mv.add("messageError", "Une erreur inattendue s'est produite : " + e.getMessage());
             }
-
-            List<Reservation> reservations = reservationDao.getByIdUser(utilisateur.getId());
-            mv.add("reservations", reservations);
+    
+            try {
+                List<Reservation> reservations = reservationDao.getByIdUser(utilisateur.getId());
+                mv.add("reservations", reservations);
+            } catch (Exception e) {
+                mv.add("messageError", "Erreur lors du chargement des réservations : " + e.getMessage());
+            }
+        } else {
+            mv.add("messageError", "Vous devez être connecté pour annuler une réservation.");
         }
     
         mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
@@ -156,19 +164,6 @@ public class ReservationController {
             MySession session
     ) {
         ModelView mv = new ModelView();
-<<<<<<< Updated upstream
-        
-        System.out.println("=== Début traitement validerReservation ===");
-        System.out.println("Vol ID: " + volId);
-        System.out.println("Siège ID: " + siegeId);
-        System.out.println("Nombre de passagers: " + nombrePassagers);
-        
-        if (passeport != null) {
-            System.out.println("Fichier passeport reçu: " + passeport.getFileName());
-            System.out.println("Taille du fichier: " + (passeport.getFileData() != null ? passeport.getFileData().length : 0) + " octets");
-        } else {
-            System.out.println("ERREUR: Aucun fichier passeport reçu!");
-=======
         ReservationDao reservationDao = new ReservationDao();
     
         System.out.println("Début de la méthode validerReservation");
@@ -224,54 +219,11 @@ public class ReservationController {
             mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
             mv.add("pageContent", "/WEB-INF/pages/reservation/mes-reservation.jsp");
             return mv;
->>>>>>> Stashed changes
         }
     
         Object authUser = session.get("authUser");
-        System.out.println("Utilisateur authentifié: " + (authUser != null ? "Oui" : "Non"));
-        
         if (authUser instanceof Utilisateur utilisateur) {
-            System.out.println("ID Utilisateur: " + utilisateur.getId());
-            
             try {
-<<<<<<< Updated upstream
-                int reservationId = reservationDao.creerReservation(utilisateur.getId(), volId, siegeId, nombrePassagers, passeport.getFileName());
-                System.out.println("Réservation créée avec succès. ID de réservation: " + reservationId);
-
-                String filePath = saveFile(passeport, utilisateur.getId(), volId, reservationId);
-                System.out.println("Fichier sauvegardé avec succès: " + filePath);
-
-                mv.add("messageSuccess", "Réservation effectuée avec succès !");
-            } catch (IOException e) {
-                System.out.println("ERREUR IO: " + e.getMessage());
-                e.printStackTrace();
-                mv.add("messageError", "Erreur lors de la sauvegarde du fichier: " + e.getMessage());
-            } catch (SQLException e) {
-                System.out.println("ERREUR SQL: " + e.getMessage());
-                e.printStackTrace();
-                mv.add("messageError", "Erreur lors de la création de la réservation: " + e.getMessage());
-            } catch (Exception e) {
-                System.out.println("ERREUR GÉNÉRALE: " + e.getMessage());
-                e.printStackTrace();
-                mv.add("messageError", "Erreur inattendue: " + e.getMessage());
-            }
-
-            try {
-                List<Reservation> reservations = reservationDao.getByIdUser(utilisateur.getId());
-                mv.add("reservations", reservations);
-                System.out.println("Nombre de réservations récupérées: " + reservations.size());
-            } catch (Exception e) {
-                System.out.println("Erreur lors de la récupération des réservations: " + e.getMessage());
-            }
-        } else {
-            System.out.println("ERREUR: Utilisateur non authentifié ou de type incorrect");
-            mv.add("messageError", "Veuillez vous connecter pour effectuer une réservation");
-        }
-
-        mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
-        mv.add("pageContent", "/WEB-INF/pages/reservation/mes-reservation.jsp");
-        System.out.println("=== Fin traitement validerReservation ===");
-=======
                 int reservationId = reservationDao.creerReservation(utilisateur.getId(), volId, listePassagers, siegeId);
                 System.out.println("id reservation:" + reservationId);
                 
@@ -305,7 +257,6 @@ public class ReservationController {
     
         mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
         mv.add("pageContent", "/WEB-INF/pages/reservation/reservation-vol.jsp");
->>>>>>> Stashed changes
         return mv;
     }
 

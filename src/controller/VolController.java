@@ -37,7 +37,6 @@ public class VolController {
     public ModelView getAllVols() {
         ModelView mv = new ModelView();
         
-
         mv.add("vols", vols);
         mv.add("avions", avions);
         mv.add("villes", villes);
