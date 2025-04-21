@@ -1,0 +1,55 @@
+Fonctionnalites:
+-Application regles de prix vols pour adultes et pour efant 
+-Reservation vols.
+
+Simulation scenarion reservation vols:
+Donnees :
+-Regles prix vols : -20% pour les enfants (age:1-13).  
+-Type sige:
+	-Business: tarifs 800$
+	-Economique: tarifs 180$
+	-Premium : tarifs 350$
+
+.Scenario: Un utilisateur connecte a l'application et effectue un reservation de 5 personnes dont:
+. 2 adultes :
+	-Business:reservation de  deux siege du type Business.
+. 3 enfants :
+	-Economique :reservation de trois siege	du type economique
+	-Premium :reservation d'un siege du type premiere.
+
+-Réservation :
+. Adultes (sans réduction)
+
+    2 sièges Business :
+    2 × 800$ = 1600$
+
+. Enfants (avec -20% réduction)
+
+    3 sièges Économique :
+    3 × (180 - 20%) = 3 × 144 = 432$
+
+    1 siège Premium :
+    1 × (350 - 20%) = 1 × 280 = 280$
+
+->Total adultes : 1600$
+
+->Total enfants : 432$ + 280$ = 712$
+
+->Total tarifs vol = 1600 + 712= 2312$
+
+COTE AFFICHAGE:
+creation formulaire reservation:
+	-Listes options vols disponnibles 
+	-Listes options sieges lier au vols et au type de siege
+	-Affichage sous formes checkbox des listes de sieges avec numero pour chaque type de siege selectionner.
+	-Affichage dynamique formulaire saisies informations passager en fonction du siege checker:
+		Input: nom,prenom,date naissance
+		Input file : passport 
+COTE METIER :
+-Modification de la methode creerReservation:
+	->Calcul dynamique nombre passagers
+	->Calcul du montant total base sur nombre de adulte et enfant et le prix2
+		
+	
+
+	

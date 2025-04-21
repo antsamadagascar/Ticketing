@@ -10,6 +10,7 @@ import annotation.methods.Url;
 import dao.ReservationDao;
 import dao.SiegeVolDAO;
 import dao.VolDao;
+import models.Passager;
 import models.Reservation;
 import models.SiegeVol;
 import models.Utilisateur;
@@ -19,13 +20,17 @@ import other.ModelView;
 import other.MySession;
 import utils.connection.PostgresConnection;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller("ReservationController")
 @Authentification
@@ -97,7 +102,7 @@ public class ReservationController {
                 }
             } catch (SQLException e) {
                 String erreurMessage = e.getMessage();
-                System.out.println("SQLException message: " + erreurMessage); // Log
+                System.out.println("SQLException message: " + erreurMessage); 
                 if (erreurMessage.toLowerCase().contains("annulation doit")) {
                     try {
                         int heuresAnnulation = reservationDao.getHeuresAnnulation();
@@ -129,90 +134,129 @@ public class ReservationController {
         return mv;
     }
 
-    public String saveFile(FileUpload fileUpload, int userId, int volId, int reservationId) throws IOException {
+    public String saveFile(FileUpload fileUpload, int userId, int volId, int reservationId, int passagerId) throws IOException {
         String userFolder = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\Ticketing\\upload\\utilisateur_" + userId;
         Files.createDirectories(Paths.get(userFolder));
         String volFolder = userFolder + "\\vol_" + volId;
         Files.createDirectories(Paths.get(volFolder));
-
+    
         String reservationFolder = volFolder + "\\reservation_" + reservationId;
         Files.createDirectories(Paths.get(reservationFolder));
 
-        String filePath = reservationFolder + "\\";
+        String passagerFolder = reservationFolder + "\\passager_" + passagerId;
+        Files.createDirectories(Paths.get(passagerFolder));
+    
+        String filePath = passagerFolder + "\\";
         fileUpload.setFilePath(filePath);
         fileUpload.saveFile();
-
+    
         return filePath;
     }
-
+    
     @Url("/reservation/valider")
     @Post
-    public ModelView validerReservation(@Param(name = "volId") int volId,
-                                        @Param(name = "siegeId") int siegeId,
-                                        @Param(name = "nombrePassagers") int nombrePassagers,
-                                        @Param(name = "passeport") FileUpload passeport,
-                                        MySession session) {
+    public ModelView validerReservation(
+            @Param(name = "volId") int volId,
+            @Param(name = "siegeId") List<Integer> siegeId,
+            @Param(name = "nombrePassagers") int nombrePassagers,
+            @Param(name = "passeport") List<FileUpload> passeports,
+            @Param(name = "passagers") String passagersJson,
+            MySession session
+    ) {
         ModelView mv = new ModelView();
         ReservationDao reservationDao = new ReservationDao();
-        
-        System.out.println("=== Début traitement validerReservation ===");
-        System.out.println("Vol ID: " + volId);
-        System.out.println("Siège ID: " + siegeId);
-        System.out.println("Nombre de passagers: " + nombrePassagers);
-        
-        if (passeport == null) {
-            System.out.println("ERREUR: Aucun fichier passeport reçu!");
-            mv.add("messageError", "Veuillez fournir un fichier passeport.");
+    
+        System.out.println("Début de la méthode validerReservation");
+    
+        if (passeports == null || passeports.isEmpty() || passeports.size() != nombrePassagers) {
+            mv.add("messageError", "Veuillez fournir un fichier passeport pour chaque passager.");
+            mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
+            mv.add("pageContent", "/WEB-INF/pages/reservation/reservation-vol.jsp");
+            return mv;
+        }
+    
+        if (siegeId == null || siegeId.size() != nombrePassagers) {
+            mv.add("messageError", "Le nombre de sièges sélectionnés ne correspond pas.");
+            mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
+            mv.add("pageContent", "/WEB-INF/pages/reservation/reservation-vol.jsp");
+            return mv;
+        }
+    
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        List<Passager> listePassagers = new ArrayList<>();
+    
+        try {
+            System.out.println("Contenu du JSON des passagers: " + passagersJson);
+    
+            List<Passager> passagers = objectMapper.readValue(passagersJson, objectMapper.getTypeFactory().constructCollectionType(List.class, Passager.class));
+    
+            if (passagers == null || passagers.size() != nombrePassagers) {
+                mv.add("messageError", "Le nombre de passagers ne correspond pas.");
+                mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
+                mv.add("pageContent", "/WEB-INF/pages/reservation/reservation-vol.jsp");
+                return mv;
+            }
+    
+            for (int i = 0; i < passagers.size(); i++) {
+                Passager p = passagers.get(i);
+                if (p.getNom() == null || p.getNom().isEmpty() ||
+                    p.getPrenom() == null || p.getPrenom().isEmpty() ||
+                    p.getDateNaissance() == null) {
+                    mv.add("messageError", "Données incomplètes pour le passager " + (i + 1));
+                    mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
+                    mv.add("pageContent", "/WEB-INF/pages/reservation/reservation-vol.jsp");
+                    return mv;
+                }
+    
+                String fileName = passeports.get(i).getFileName();
+                Passager complet = new Passager(0, 0, p.getNom(), p.getPrenom(), p.getDateNaissance(), fileName);
+                listePassagers.add(complet);
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur lors du parsing des passagers: " + e.getMessage());
+            mv.add("messageError", "Erreur lors du parsing des données des passagers: " + e.getMessage());
             mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
             mv.add("pageContent", "/WEB-INF/pages/reservation/mes-reservation.jsp");
             return mv;
         }
-        
+    
         Object authUser = session.get("authUser");
         if (authUser instanceof Utilisateur utilisateur) {
             try {
-                int reservationId = reservationDao.creerReservation(
-                    utilisateur.getId(), volId, siegeId, nombrePassagers, passeport.getFileName());
-                String filePath = saveFile(passeport, utilisateur.getId(), volId, reservationId);
+                int reservationId = reservationDao.creerReservation(utilisateur.getId(), volId, listePassagers, siegeId);
+                System.out.println("id reservation:" + reservationId);
+                
+                for (int i = 0; i < listePassagers.size(); i++) {
+                    Passager passager = listePassagers.get(i);
+                    FileUpload passeport = passeports.get(i);
+                    
+                    int passagerId = passager.getId() > 0 ? passager.getId() : i + 1;
+                    
+                    saveFile(passeport, utilisateur.getId(), volId, reservationId, passagerId);
+                }  
                 mv.add("messageSuccess", "Réservation effectuée avec succès !");
             } catch (SQLException e) {
-                System.out.println("ERREUR SQL: " + e.getMessage());
                 if (e.getMessage().toLowerCase().contains("réservation doit être faite")) {
                     try {
                         int heuresReservation = reservationDao.getHeuresReservation();
-                        String message = String.format(
-                            "La réservation doit être faite au moins %d heure%s avant le vol.",
-                            heuresReservation, heuresReservation > 1 ? "s" : "");
+                        String message = "La réservation doit être faite au moins " + heuresReservation + " heure" + (heuresReservation > 1 ? "s" : "") + " avant le vol.";
                         mv.add("messageError", message);
                     } catch (SQLException ex) {
                         mv.add("messageError", "Erreur lors de la vérification du délai de réservation.");
                     }
                 } else {
-                    mv.add("messageError", "Erreur lors de la création de la réservation.");
+                    mv.add("messageError", "Erreur lors de la réservation.");
                 }
             } catch (IOException e) {
-                System.out.println("ERREUR IO: " + e.getMessage());
-                mv.add("messageError", "Erreur lors de la sauvegarde du fichier.");
-            } catch (Exception e) {
-                System.out.println("ERREUR GÉNÉRALE: " + e.getMessage());
-                mv.add("messageError", "Erreur inattendue.");
-            }
-
-            try {
-                List<Reservation> reservations = reservationDao.getByIdUser(utilisateur.getId());
-                mv.add("reservations", reservations);
-            } catch (Exception e) {
-                mv.add("messageError", "Erreur lors du chargement des réservations.");
+                mv.add("messageError", "Erreur lors de l'enregistrement des fichiers passeport: " + e.getMessage());
             }
         } else {
-            mv.add("messageError", "Veuillez vous connecter pour effectuer une réservation.");
+            mv.add("messageError", "Utilisateur non authentifié.");
         }
-
- 
-        mv.add("vols", vols); 
+    
         mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
         mv.add("pageContent", "/WEB-INF/pages/reservation/reservation-vol.jsp");
-        System.out.println("=== Fin traitement validerReservation ===");
         return mv;
     }
 

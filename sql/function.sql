@@ -135,11 +135,13 @@ BEGIN
     WHERE sv.vol_id = NEW.vol_id 
       AND ats.type_siege_id = NEW.type_siege_id 
       AND sv.siege_id = s.id 
-      AND (SELECT date_depart FROM vol WHERE id = NEW.vol_id) BETWEEN NEW.date_debut AND NEW.date_fin;
+      AND (SELECT date(date_depart) FROM vol WHERE id = NEW.vol_id) 
+          BETWEEN date(NEW.date_debut) AND date(NEW.date_fin);
 
     RETURN NEW; 
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE TRIGGER trigger_appliquer_promotion
 AFTER INSERT OR UPDATE ON promotion_vol
@@ -202,15 +204,45 @@ FOR EACH ROW
 EXECUTE FUNCTION calculer_montant_total();
 
 ---
---  7. Fonction pour recuperer les prix unitaire d'un siege (Ok0)
+--  7. Fonction pour recuperer les prix unitaire d'un siege (Ok)
 ---
+
 CREATE OR REPLACE FUNCTION recuperer_prix_unitaire()
 RETURNS TRIGGER AS $$
+DECLARE
+    age_passager INTEGER;
+    pourcentage_prix DECIMAL(10, 2);
+    prix_base_siege DECIMAL(10, 2);
+    date_depart_vol TIMESTAMP;
 BEGIN
-    NEW.prix_unitaire := (SELECT prix_final FROM siege_vol WHERE id = NEW.siege_vol_id);
+    SELECT v.date_depart INTO date_depart_vol
+    FROM reservation r
+    JOIN vol v ON r.vol_id = v.id
+    WHERE r.id = (SELECT reservation_id FROM passager WHERE id = NEW.passager_id);
+
+    SELECT EXTRACT(YEAR FROM AGE(date_depart_vol, p.date_naissance)) INTO age_passager
+    FROM passager p
+    WHERE p.id = NEW.passager_id;
+
+    SELECT prix_final INTO prix_base_siege
+    FROM siege_vol
+    WHERE id = NEW.siege_vol_id;
+
+    SELECT regle_prix.pourcentage_prix INTO pourcentage_prix
+    FROM regle_prix
+    WHERE age_passager BETWEEN age_min AND age_max
+    LIMIT 1;
+
+    IF pourcentage_prix IS NULL THEN
+        pourcentage_prix := 100.00;
+    END IF;
+
+    NEW.prix_unitaire := prix_base_siege * (pourcentage_prix / 100.00);
+
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE TRIGGER trigger_recuperer_prix_unitaire
 BEFORE INSERT ON detail_reservation
@@ -243,3 +275,52 @@ CREATE TRIGGER trigger_liberer_sieges_apres_annulation
 AFTER UPDATE ON reservation
 FOR EACH ROW
 EXECUTE FUNCTION liberer_sieges_apres_annulation();
+
+
+---
+-- Fonction pour générer les enregistrements dans siege_vol
+---
+CREATE OR REPLACE FUNCTION generer_sieges_vol() 
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Insérer les enregistrements dans siege_vol pour chaque siège de l'avion
+    INSERT INTO siege_vol (
+        vol_id, 
+        siege_id, 
+        est_promotion, 
+        taux_promotion, 
+        prix_base, 
+        prix_final, 
+        est_disponible
+    )
+    SELECT 
+        NEW.id AS vol_id, 
+        s.id AS siege_id,
+        CASE 
+            WHEN pv.taux_promotion IS NOT NULL AND pv.date_debut <= NEW.date_depart AND pv.date_fin >= NEW.date_depart 
+            THEN TRUE 
+            ELSE FALSE 
+        END AS est_promotion,
+        COALESCE(pv.taux_promotion, 0) AS taux_promotion,
+        ts.tarif_base AS prix_base,
+        CASE 
+            WHEN pv.taux_promotion IS NOT NULL AND pv.date_debut <= NEW.date_depart AND pv.date_fin >= NEW.date_depart 
+            THEN ts.tarif_base * (1 - pv.taux_promotion / 100)
+            ELSE ts.tarif_base
+        END AS prix_final,
+        TRUE AS est_disponible
+    FROM siege s
+    JOIN avion_type_siege ats ON s.avion_type_siege_id = ats.id
+    JOIN type_siege ts ON ats.type_siege_id = ts.id
+    LEFT JOIN promotion_vol pv ON pv.vol_id = NEW.id AND pv.type_siege_id = ts.id
+    WHERE ats.avion_id = NEW.avion_id;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger pour exécuter la fonction après l'insertion d'un vol
+CREATE TRIGGER trigger_generer_sieges_vol
+AFTER INSERT ON vol
+FOR EACH ROW
+EXECUTE FUNCTION generer_sieges_vol();
