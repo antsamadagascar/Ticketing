@@ -46,20 +46,6 @@
         CONSTRAINT check_statut CHECK (statut IN (0, 1, -1))
     );
 
-<<<<<<< Updated upstream
-
-CREATE TABLE siege_vol (
-    id SERIAL PRIMARY KEY,
-    vol_id INTEGER NOT NULL REFERENCES vol(id) ON DELETE CASCADE,
-    siege_id INTEGER NOT NULL REFERENCES siege(id) ON DELETE CASCADE,
-    est_promotion BOOLEAN DEFAULT FALSE,
-    taux_promotion DECIMAL(5, 2) DEFAULT 0 CHECK (taux_promotion >= 0 AND taux_promotion <= 100),
-    prix_base DECIMAL(10, 2) NOT NULL CHECK (prix_base >= 0),
-    prix_final DECIMAL(10, 2) NOT NULL CHECK (prix_final >= 0),
-    est_disponible BOOLEAN DEFAULT TRUE, -- TRUE = Disponible, FALSE = Réservé
-    UNIQUE(vol_id, siege_id)
-);
-=======
     CREATE TABLE siege_vol (
         id SERIAL PRIMARY KEY,
         vol_id INTEGER NOT NULL REFERENCES vol(id) ON DELETE CASCADE,
@@ -71,7 +57,6 @@ CREATE TABLE siege_vol (
         est_disponible BOOLEAN DEFAULT TRUE, -- TRUE = Disponible, FALSE = Réservé
         UNIQUE(vol_id, siege_id)
     );
->>>>>>> Stashed changes
 
     CREATE TABLE promotion_vol (
         id SERIAL PRIMARY KEY,
@@ -105,6 +90,15 @@ CREATE TABLE siege_vol (
         nombre_passager INTEGER DEFAULT 0 CHECK (nombre_passager >= 0),
         montant_total DECIMAL(10, 2) NOT NULL CHECK (montant_total >= 0) DEFAULT 0
     );
+    
+    CREATE TABLE passager (
+        id SERIAL PRIMARY KEY,
+        reservation_id INTEGER NOT NULL REFERENCES reservation(id) ON DELETE CASCADE,
+        nom VARCHAR(100) NOT NULL,
+        prenom VARCHAR(100) NOT NULL,
+        date_naissance DATE NOT NULL,
+        passeport_file_data VARCHAR(100) NOT NULL
+    );
 
     CREATE TABLE detail_reservation (
         id SERIAL PRIMARY KEY,
@@ -115,23 +109,6 @@ CREATE TABLE siege_vol (
         UNIQUE(reservation_id, siege_vol_id)
     );
 
-    CREATE TABLE passager (
-        id SERIAL PRIMARY KEY,
-        reservation_id INTEGER NOT NULL REFERENCES reservation(id) ON DELETE CASCADE,
-        nom VARCHAR(100) NOT NULL,
-        prenom VARCHAR(100) NOT NULL,
-        date_naissance DATE NOT NULL,
-        passeport_file_data VARCHAR(100) NOT NULL
-    );
-    ALTER TABLE detail_reservation ADD COLUMN passager_id INTEGER REFERENCES passager(id) ON DELETE CASCADE;
-
-<<<<<<< Updated upstream
-CREATE TABLE regle_annulation (
-    id SERIAL PRIMARY KEY,
-    heures_apres_reservation INTEGER NOT NULL, 
-    active BOOLEAN DEFAULT TRUE
-);
-=======
     CREATE TABLE regle_reservation (
         id SERIAL PRIMARY KEY,
         heures_avant_vol INTEGER NOT NULL, 
@@ -151,4 +128,3 @@ CREATE TABLE regle_annulation (
         pourcentage_prix DECIMAL(10,2)
     );
 
->>>>>>> Stashed changes

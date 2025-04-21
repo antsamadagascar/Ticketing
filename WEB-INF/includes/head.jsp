@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="<%= request.getContextPath() %>/template/assets/font-awesome/css/all.min.css"> <!-- Font Awesome -->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/template/assets/css/jquery.dataTables.min.css"> <!-- DataTables -->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/template/assets/css/buttons/2.3.6/css/buttons.dataTables.min.css"> <!-- DataTables Buttons -->
-
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <!-- Scripts JavaScript -->
     <script src="<%= request.getContextPath() %>/template/assets/js/jquery/jquery-3.6.4.min.js"></script> <!-- jQuery -->
     <script src="<%= request.getContextPath() %>/template/assets/js/bootstrap.bundle.min.js"></script> <!-- Bootstrap -->

@@ -239,16 +239,6 @@
             </tr>
             <% } %>
         </table>
-<<<<<<< Updated upstream
-        <%
-            } else {
-        %>
-        <p class="no-reservations">Aucune réservation trouvée.</p>
-        <%
-            }
-        %>
-    </div>
-=======
         <% } else { %>
         <div class="no-reservations">
             <i class="fas fa-search"></i>
@@ -275,4 +265,3 @@
     </script>
 </body>
 </html>
->>>>>>> Stashed changes
