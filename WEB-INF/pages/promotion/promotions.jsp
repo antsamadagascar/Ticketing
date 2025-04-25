@@ -1,4 +1,25 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    java.time.LocalDateTime now = java.time.LocalDateTime.now();
+    java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+    String dateDebut;
+    String dateFin;
+
+    if (request.getAttribute("dateDebut") != null) {
+        dateDebut = (String) request.getAttribute("dateDebut");
+    } else {
+        dateDebut = now.format(formatter);
+    }
+
+    if (request.getAttribute("dateFin") != null) {
+        dateFin = (String) request.getAttribute("dateFin");
+    } else {
+        java.time.LocalDateTime finPromo = now.plusDays(30); // Promotion valide 30 jours
+        dateFin = finPromo.format(formatter);
+    }
+%>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -83,8 +104,8 @@
                     <!-- Date de début -->
                     <div>
                         <label class="block text-gray-700 font-medium mb-2">Date Début</label>
-                        <input type="datetime-local" name="dateDebut" value="<%= request.getAttribute("dateDebut") != null ? request.getAttribute("dateDebut") : "" %>"
-                               class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 <%= request.getAttribute("dateDebutError") != null ? "border-red-500" : "" %>">
+                        <input type="datetime-local" name="dateDebut" value="<%= dateDebut %>"
+                            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 <%= request.getAttribute("dateDebutError") != null ? "border-red-500" : "" %>">
                         <% if (request.getAttribute("dateDebutError") != null) { %>
                             <p class="text-red-500 text-sm mt-1"><%= request.getAttribute("dateDebutError") %></p>
                         <% } %>
@@ -93,8 +114,8 @@
                     <!-- Date de fin -->
                     <div>
                         <label class="block text-gray-700 font-medium mb-2">Date Fin</label>
-                        <input type="datetime-local" name="dateFin" value="<%= request.getAttribute("dateFin") != null ? request.getAttribute("dateFin") : "" %>"
-                               class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 <%= request.getAttribute("dateFinError") != null ? "border-red-500" : "" %>">
+                        <input type="datetime-local" name="dateFin" value="<%= dateFin %>"
+                            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 <%= request.getAttribute("dateFinError") != null ? "border-red-500" : "" %>">
                         <% if (request.getAttribute("dateFinError") != null) { %>
                             <p class="text-red-500 text-sm mt-1"><%= request.getAttribute("dateFinError") %></p>
                         <% } %>

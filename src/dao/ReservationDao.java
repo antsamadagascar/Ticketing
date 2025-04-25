@@ -109,9 +109,9 @@ public class ReservationDao {
         }
     }
 
-    public int creerReservation(int idUtilisateur, int idVol, List<Passager> passagers,
+    public int creerReservation(int idUtilisateur, int idVol,Timestamp dateReservation, List<Passager> passagers,
                             List<Integer> siegeIds) throws SQLException {
-    String sqlReservation = "INSERT INTO reservation (utilisateur_id, vol_id, nombre_passager) VALUES (?, ?, ?) RETURNING id";
+    String sqlReservation = "INSERT INTO reservation (utilisateur_id, vol_id,date_reservation,nombre_passager) VALUES (?,?, ?, ?) RETURNING id";
     String sqlDetails = "INSERT INTO detail_reservation (reservation_id, siege_vol_id, passager_id) VALUES (?, ?, ?)";
 
     try (Connection connection = PostgresConnection.getConnection()) {
@@ -121,11 +121,12 @@ public class ReservationDao {
         try (PreparedStatement stmtReservation = connection.prepareStatement(sqlReservation)) {
             stmtReservation.setInt(1, idUtilisateur);
             stmtReservation.setInt(2, idVol);
-            stmtReservation.setInt(3, passagers.size());
+            stmtReservation.setTimestamp(3, dateReservation);            
+            stmtReservation.setInt(4, passagers.size());
 
             System.out.println(">> Requête RESERVATION : " +
-                "INSERT INTO reservation (utilisateur_id, vol_id, nombre_passager) VALUES (" +
-                idUtilisateur + ", " + idVol + ", " + passagers.size() + ")");
+                "INSERT INTO reservation (utilisateur_id, vol_id,date_reservation,nombre_passager) VALUES (" +
+                idUtilisateur + ", " + idVol + ", " + dateReservation +",  " + passagers.size() + ")");
 
             ResultSet rs = stmtReservation.executeQuery();
             if (!rs.next()) {

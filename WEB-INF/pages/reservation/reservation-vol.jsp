@@ -1,7 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="models.Vol" %>
-
+<%
+    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+    String dateTimeNow = sdf.format(new java.util.Date());
+%>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -87,6 +90,20 @@
                                 }
                             %>
                         </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Date de réservation -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Date de réservation</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="dateReservation" class="form-label">Choisissez une date de réservation</label>
+                        <input type="datetime-local" id="dateReservation" name="dateReservation" class="form-control" required
+                            value="<%= dateTimeNow %>">
+
                     </div>
                 </div>
             </div>
@@ -474,6 +491,7 @@
                     const formData = new FormData();
         
                     const volId = document.getElementById("volSelect").value;
+                    const dateReservation = document.getElementById("dateReservation").value;
                     const nombrePassagers = this.passagerCount;
                     const siegeIds = Array.from(this.selectedSeats);
                     const passagers = [];
@@ -514,6 +532,7 @@
                     }
         
                     formData.append("volId", volId);
+                    formData.append("dateReservation", dateReservation);
                     formData.append("nombrePassagers", nombrePassagers);
                     siegeIds.forEach(id => formData.append("siegeId", id));
                     formData.append("passagers", JSON.stringify(passagers));

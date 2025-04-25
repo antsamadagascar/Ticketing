@@ -1,4 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    java.time.LocalDateTime now = java.time.LocalDateTime.now();
+    java.time.LocalDateTime arrivee = now.plusHours(3);
+    java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+    String dateDepart = request.getAttribute("dateDepart") != null ? (String) request.getAttribute("dateDepart") : now.format(formatter);
+    String dateArrivee = request.getAttribute("dateArrivee") != null ? (String) request.getAttribute("dateArrivee") : arrivee.format(formatter);
+%>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -238,8 +247,7 @@
                             <label class="form-label">
                                 <i class="far fa-calendar-alt"></i> Date Départ
                             </label>
-                            <input type="datetime-local" name="dateDepart" value="<%= request.getAttribute("dateDepart") != null ? request.getAttribute("dateDepart") : "" %>" 
-                                class="form-control">
+                            <input type="datetime-local" name="dateDepart" value="<%= dateDepart %>" class="form-control">
                             <% if (request.getAttribute("dateDepartError") != null) { %>
                                 <p class="error-message">
                                     <i class="fas fa-exclamation-circle"></i>
@@ -252,8 +260,7 @@
                             <label class="form-label">
                                 <i class="far fa-calendar-check"></i> Date Arrivée
                             </label>
-                            <input type="datetime-local" name="dateArrivee" value="<%= request.getAttribute("dateArrivee") != null ? request.getAttribute("dateArrivee") : "" %>" 
-                                class="form-control">
+                            <input type="datetime-local" name="dateArrivee" value="<%= dateArrivee %>" class="form-control">
                             <% if (request.getAttribute("dateArriveeError") != null) { %>
                                 <p class="error-message">
                                     <i class="fas fa-exclamation-circle"></i>

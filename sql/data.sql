@@ -23,16 +23,25 @@ INSERT INTO ville (nom, code_aeroport, pays, fuseau_horaire) VALUES
 -- ('Berlin', 'BER', 'Allemagne', 'Europe/Berlin'),
 -- ('Istanbul', 'IST', 'Turquie', 'Europe/Istanbul');
 
+---
+-- données general type siege
+---
 INSERT INTO type_siege (nom, description, tarif_base) VALUES
 ('Économique', 'Siège standard avec confort de base', 200.00),
 ('Premium', 'Siège avec plus d''espace pour les jambes', 350.00),
 ('Business', 'Siège inclinable avec service haut de gamme', 800.00);
 
+---
+-- données nombre siege par type siege avion Boeing 737
+---
 INSERT INTO avion_type_siege (avion_id, type_siege_id, nombre_sieges) VALUES
 (1, 1, 100), -- 100 sièges Économique
 (1, 2, 20),  -- 20 sièges Premium
 (1, 3, 10);  -- 10 sièges Business
 
+---
+-- données siege avion Boeing 737
+---
 INSERT INTO siege (numero, avion_type_siege_id, is_disponible) VALUES
 -- Sièges Économique (avion_type_siege_id = 1)
 ('1A', 1, TRUE),
@@ -53,8 +62,16 @@ INSERT INTO siege (numero, avion_type_siege_id, is_disponible) VALUES
 ('21B', 3, TRUE),
 ('22A', 3, TRUE);
 
-INSERT INTO vol (numero_vol, ville_depart_id, ville_arrivee_id, date_depart, date_arrivee, avion_id, statut) VALUES
-('AF123', 1, 2, '2025-04-21 10:00:00', '2025-04-14 13:00:00', 1, 0);
+-- Exemple : Vol partant dans 2 heures, arrivant dans 5h (logique)
+INSERT INTO vol (numero_vol, ville_depart_id, ville_arrivee_id, date_depart, date_arrivee, avion_id, statut)
+VALUES ('AF123', 1, 2, NOW(), NOW() + INTERVAL '5 hours', 1, 0);
+
+INSERT INTO regle_reservation (heures_avant_vol, active) VALUES
+(1, TRUE); 
+
+INSERT INTO regle_annulation (heures_apres_reservation, active) VALUES
+(1, TRUE); 
+
 
 INSERT INTO siege_vol (vol_id, siege_id, est_promotion, taux_promotion, prix_base, prix_final, est_disponible) VALUES
 -- Sièges Économique (avec 10% de promotion)
@@ -76,24 +93,21 @@ INSERT INTO siege_vol (vol_id, siege_id, est_promotion, taux_promotion, prix_bas
 (1, 14, FALSE, 0.00, 800.00, 800.00, TRUE),
 (1, 15, FALSE, 0.00, 800.00, 800.00, TRUE);
 
-INSERT INTO regle_reservation (heures_avant_vol, active) VALUES
-(24, TRUE);
-
-INSERT INTO regle_annulation (heures_apres_reservation, active) VALUES
-(48, TRUE);
 
 -- Étape 1 : Insérer la réservation
 INSERT INTO reservation (utilisateur_id, vol_id, date_reservation, statut, nombre_passager, montant_total)
-VALUES (1, 1, '2025-04-18 10:00:00', TRUE, 5, 0) -- montant_total sera mis à jour par le trigger
+VALUES (1, 1, NOW() + INTERVAL '3 hours', TRUE, 6, 0) -- montant_total sera mis à jour par le trigger
 RETURNING id; -- Notez l'ID généré (par exemple, 1)
 
 -- Étape 2 : Insérer les passagers
 INSERT INTO passager (reservation_id, nom, prenom, date_naissance, passeport_file_data) VALUES
-(1, 'Martin', 'Thomas', '1980-01-01', 'passeport1.png'),
-(1, 'Lefèvre', 'Sophie', '1985-01-01', 'passeport2.png'),
-(1, 'Martin', 'Lucas', '2015-01-01', 'passeport3.png'),
-(1, 'Martin', 'Emma', '2016-01-01', 'passeport4.png'),
-(1, 'Martin', 'Chloé', '2017-01-01', 'passeport5.png');
+(1, 'Ratovonandrasana', 'Faustin Desire', '1977-08-22', 'passeport1.png'),
+(1, 'Ramihajanirina', 'Rasoloniaina', '1985-01-01', 'passeport2.png'),
+(1, 'Ratovonandrasana', 'Aina Ny Antsa', '2015-01-01', 'passeport3.png'),
+(1, 'Ramihajanirina', 'Aina Sariaka', '2016-01-01', 'passeport4.png'),
+(1, 'Ratovoniaina', 'Ny Faneva', '2017-01-01', 'passeport5.png');
+(1, 'Ramihajanirina', 'Tsikiniaina', '2017-01-01', 'passeport5.png');
+
 
 RETURNING id; -- Notez les IDs générés (par exemple, 1, 2, 3, 4, 5)
 
@@ -110,11 +124,5 @@ SELECT montant_total FROM reservation WHERE id = 1; -- Devrait retourner 2312.00
 
 INSERT INTO promotion_vol (vol_id, type_siege_id, taux_promotion, date_debut, date_fin) VALUES
 (1, 2, 10, '2023-12-01 00:00:00', '2023-12-31 23:59:59'); 
-
-INSERT INTO regle_reservation (heures_avant_vol, active) VALUES
-(24, TRUE); 
-
-INSERT INTO regle_annulation (heures_apres_reservation, active) VALUES
-(24, TRUE); 
 
 Insert into regle_prix (age_min,age_max,pourcentage_prix)  values (5,13,30);

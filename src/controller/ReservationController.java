@@ -24,7 +24,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -157,6 +160,7 @@ public class ReservationController {
     @Post
     public ModelView validerReservation(
             @Param(name = "volId") int volId,
+            @Param(name = "dateReservation") String  dateReservationStr,
             @Param(name = "siegeId") List<Integer> siegeId,
             @Param(name = "nombrePassagers") int nombrePassagers,
             @Param(name = "passeport") List<FileUpload> passeports,
@@ -185,7 +189,7 @@ public class ReservationController {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
         List<Passager> listePassagers = new ArrayList<>();
-    
+
         try {
             System.out.println("Contenu du JSON des passagers: " + passagersJson);
     
@@ -224,7 +228,22 @@ public class ReservationController {
         Object authUser = session.get("authUser");
         if (authUser instanceof Utilisateur utilisateur) {
             try {
-                int reservationId = reservationDao.creerReservation(utilisateur.getId(), volId, listePassagers, siegeId);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+                java.util.Date utilDate = null;
+
+                try {
+                    utilDate = sdf.parse(dateReservationStr);
+                    if (utilDate == null) {
+                        throw new IllegalArgumentException("Date invalide");
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    throw new IllegalArgumentException("Format de date invalide : " + dateReservationStr);
+                }
+
+                java.sql.Timestamp dateReservation = new java.sql.Timestamp(utilDate.getTime());
+
+                int reservationId = reservationDao.creerReservation(utilisateur.getId(), volId,dateReservation, listePassagers, siegeId);
                 System.out.println("id reservation:" + reservationId);
                 
                 for (int i = 0; i < listePassagers.size(); i++) {
