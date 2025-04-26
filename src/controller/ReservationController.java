@@ -51,7 +51,7 @@ public class ReservationController {
         
         mv.add("vols", vols); 
         mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
-        mv.add("pageContent", "/WEB-INF/pages/reservation/reservation-vol.jsp");
+        mv.add("pageContent", "/WEB-INF/pages/reservation/add-reservation-vol.jsp");
 
         return mv;
     }
@@ -175,14 +175,14 @@ public class ReservationController {
         if (passeports == null || passeports.isEmpty() || passeports.size() != nombrePassagers) {
             mv.add("messageError", "Veuillez fournir un fichier passeport pour chaque passager.");
             mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
-            mv.add("pageContent", "/WEB-INF/pages/reservation/reservation-vol.jsp");
+            mv.add("pageContent", "/WEB-INF/pages/reservation/add-reservation-vol.jsp");
             return mv;
         }
     
         if (siegeId == null || siegeId.size() != nombrePassagers) {
             mv.add("messageError", "Le nombre de sièges sélectionnés ne correspond pas.");
             mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
-            mv.add("pageContent", "/WEB-INF/pages/reservation/reservation-vol.jsp");
+            mv.add("pageContent", "/WEB-INF/pages/reservation/add-reservation-vol.jsp");
             return mv;
         }
     
@@ -198,7 +198,7 @@ public class ReservationController {
             if (passagers == null || passagers.size() != nombrePassagers) {
                 mv.add("messageError", "Le nombre de passagers ne correspond pas.");
                 mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
-                mv.add("pageContent", "/WEB-INF/pages/reservation/reservation-vol.jsp");
+                mv.add("pageContent", "/WEB-INF/pages/reservation/add-reservation-vol.jsp");
                 return mv;
             }
     
@@ -209,7 +209,7 @@ public class ReservationController {
                     p.getDateNaissance() == null) {
                     mv.add("messageError", "Données incomplètes pour le passager " + (i + 1));
                     mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
-                    mv.add("pageContent", "/WEB-INF/pages/reservation/reservation-vol.jsp");
+                    mv.add("pageContent", "/WEB-INF/pages/reservation/add-reservation-vol.jsp");
                     return mv;
                 }
     
@@ -241,7 +241,7 @@ public class ReservationController {
                     throw new IllegalArgumentException("Format de date invalide : " + dateReservationStr);
                 }
 
-                java.sql.Timestamp dateReservation = new java.sql.Timestamp(utilDate.getTime());
+                Timestamp dateReservation = new java.sql.Timestamp(utilDate.getTime());
 
                 int reservationId = reservationDao.creerReservation(utilisateur.getId(), volId,dateReservation, listePassagers, siegeId);
                 System.out.println("id reservation:" + reservationId);
@@ -275,7 +275,7 @@ public class ReservationController {
         }
     
         mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
-        mv.add("pageContent", "/WEB-INF/pages/reservation/reservation-vol.jsp");
+        mv.add("pageContent", "/WEB-INF/pages/reservation/add-reservation-vol.jsp");
         return mv;
     }
 
