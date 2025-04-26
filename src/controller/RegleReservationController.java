@@ -29,7 +29,7 @@ public class RegleReservationController {
         
         mv.add("regles", regles);
         mv.setUrl("/WEB-INF/pages/admin/template-admin.jsp");
-        mv.add("pageContent", "/WEB-INF/pages/reservation/reservations.jsp");
+        mv.add("pageContent", "/WEB-INF/pages/reservation/config-reservations.jsp");
         
         return mv;
     }
@@ -70,7 +70,7 @@ public class RegleReservationController {
             mv.add("heuresAvantVol", heuresAvantVolStr);
             mv.add("active", activeStr);
             mv.setUrl("/WEB-INF/pages/admin/template-admin.jsp");
-            mv.add("pageContent", "/WEB-INF/pages/reservation/reservations.jsp");
+            mv.add("pageContent", "/WEB-INF/pages/reservation/config-reservations.jsp");
             return mv;
         }
 
