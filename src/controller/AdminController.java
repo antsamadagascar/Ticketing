@@ -1,9 +1,9 @@
 package controller;
 
-import annotation.Controller;
-import annotation.auth.Authentification;
-import annotation.methods.Url;
-import other.ModelView;
+import mg.itu.nyantsa.annotation.Controller;
+import mg.itu.nyantsa.annotation.auth.Authentification;
+import mg.itu.nyantsa.annotation.methods.Url;
+import mg.itu.nyantsa.other.ModelView;
 
 @Controller("AdminController")
 @Authentification("manager") 

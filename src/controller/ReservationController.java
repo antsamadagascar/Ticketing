@@ -1,12 +1,12 @@
 package controller;
 
-import annotation.Controller;
-import annotation.Param;
-import annotation.auth.Authentification;
-import annotation.methods.Get;
-import annotation.methods.Post;
-import annotation.methods.RestApi;
-import annotation.methods.Url;
+import mg.itu.nyantsa.annotation.Controller;
+import mg.itu.nyantsa.annotation.Param;
+import mg.itu.nyantsa.annotation.auth.Authentification;
+import mg.itu.nyantsa.annotation.methods.Get;
+import mg.itu.nyantsa.annotation.methods.Post;
+import mg.itu.nyantsa.annotation.methods.RestApi;
+import mg.itu.nyantsa.annotation.methods.Url;
 import dao.ReservationDao;
 import dao.SiegeVolDAO;
 import dao.VolDao;
@@ -15,9 +15,9 @@ import models.Reservation;
 import models.SiegeVol;
 import models.Utilisateur;
 import models.Vol;
-import other.FileUpload;
-import other.ModelView;
-import other.MySession;
+import mg.itu.nyantsa.other.FileUpload;
+import mg.itu.nyantsa.other.ModelView;
+import mg.itu.nyantsa.other.MySession;
 import utils.connection.PostgresConnection;
 
 import java.io.IOException;

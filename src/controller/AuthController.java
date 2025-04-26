@@ -3,15 +3,15 @@ package controller;
 import dao.UserDAO;
 import models.Utilisateur;
 import java.util.List;
-import annotation.Controller;
-import annotation.Param;
-import annotation.methods.Get;
-import annotation.methods.Post;
-import annotation.methods.Url;
-import other.ModelView;
-import other.MySession;
-import exception.ValidationException;
-import annotation.ValidateForm;
+import mg.itu.nyantsa.annotation.Controller;
+import mg.itu.nyantsa.annotation.Param;
+import mg.itu.nyantsa.annotation.methods.Get;
+import mg.itu.nyantsa.annotation.methods.Post;
+import mg.itu.nyantsa.annotation.methods.Url;
+import mg.itu.nyantsa.other.ModelView;
+import mg.itu.nyantsa.other.MySession;
+import mg.itu.nyantsa.exception.ValidationException;
+import mg.itu.nyantsa.annotation.ValidateForm;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Controller("AuthController")

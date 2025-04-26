@@ -39,7 +39,7 @@
                             value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>"
                             autocomplete="username" 
                             autofocus
-                            required
+                            
                         >
                     </div>
                     <% if (request.getAttribute("emailError") != null) { %>
@@ -61,7 +61,7 @@
                             class="form-input" 
                             placeholder="Entrez votre mot de passe"
                             autocomplete="current-password"
-                            required
+                            
                         >
                         <button type="button" class="password-toggle" id="togglePassword" aria-label="Afficher le mot de passe">
                             <i class="fas fa-eye"></i>

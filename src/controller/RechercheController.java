@@ -6,17 +6,17 @@ import dao.VolMulticritereDAO;
 import models.TypeSiege;
 import models.Ville;
 import models.VolMulticritereResult;
-import other.ModelView;
+import mg.itu.nyantsa.other.ModelView;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import annotation.Controller;
-import annotation.Param;
-import annotation.auth.Authentification;
-import annotation.methods.Get;
-import annotation.methods.Post;
-import annotation.methods.Url;
+import mg.itu.nyantsa.annotation.Controller;
+import mg.itu.nyantsa.annotation.Param;
+import mg.itu.nyantsa.annotation.auth.Authentification;
+import mg.itu.nyantsa.annotation.methods.Get;
+import mg.itu.nyantsa.annotation.methods.Post;
+import mg.itu.nyantsa.annotation.methods.Url;
 
 
 @Controller("RechercheController")

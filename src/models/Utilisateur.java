@@ -1,7 +1,7 @@
 package models;
 
 import java.sql.Date;
-import annotation.ValidateForm.*;
+import mg.itu.nyantsa.annotation.ValidateForm.*;
 
 public class Utilisateur {
    // @ValidNumber(min = 1, positiveOnly = true)

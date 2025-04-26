@@ -1,9 +1,9 @@
 package controller;
 
-import annotation.Controller;
-import annotation.methods.Get;
-import annotation.methods.Url;
-import other.ModelView;
+import mg.itu.nyantsa.annotation.Controller;
+import mg.itu.nyantsa.annotation.methods.Get;
+import mg.itu.nyantsa.annotation.methods.Url;
+import mg.itu.nyantsa.other.ModelView;
 
 @Controller("HomeController")
 public class HomeController {

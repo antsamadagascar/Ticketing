@@ -6,20 +6,20 @@ import dao.VolDao;
 import models.Avion;
 import models.Ville;
 import models.Vol;
-import other.ModelView;
+import mg.itu.nyantsa.other.ModelView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import annotation.Controller;
-import annotation.Param;
-import annotation.methods.Get;
-import annotation.methods.Post;
-import annotation.methods.Url;
-import exception.ValidationError;
-import annotation.ValidateForm;
-import annotation.auth.Authentification;
+import mg.itu.nyantsa.annotation.Controller;
+import mg.itu.nyantsa.annotation.Param;
+import mg.itu.nyantsa.annotation.methods.Get;
+import mg.itu.nyantsa.annotation.methods.Post;
+import mg.itu.nyantsa.annotation.methods.Url;
+import mg.itu.nyantsa.exception.ValidationError;
+import mg.itu.nyantsa.annotation.ValidateForm;
+import mg.itu.nyantsa.annotation.auth.Authentification;
 
 @Controller("VolController")
 @Authentification("manager") 

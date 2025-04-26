@@ -1,20 +1,20 @@
 package controller;
 
 import dao.RegleAnnulationDAO;
-import exception.ValidationError;
+import mg.itu.nyantsa.exception.ValidationError;
 import models.RegleAnnulation;
-import other.ModelView;
+import mg.itu.nyantsa.other.ModelView;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import annotation.Controller;
-import annotation.Param;
-import annotation.auth.Authentification;
-import annotation.methods.Get;
-import annotation.methods.Post;
-import annotation.methods.Url;
+import mg.itu.nyantsa.annotation.Controller;
+import mg.itu.nyantsa.annotation.Param;
+import mg.itu.nyantsa.annotation.auth.Authentification;
+import mg.itu.nyantsa.annotation.methods.Get;
+import mg.itu.nyantsa.annotation.methods.Post;
+import mg.itu.nyantsa.annotation.methods.Url;
 
 @Controller("RegleAnnulationController")
 @Authentification("manager") 

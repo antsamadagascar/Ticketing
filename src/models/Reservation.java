@@ -2,7 +2,7 @@ package models;
 
 import java.sql.Timestamp;
 
-import other.FileUpload;
+import mg.itu.nyantsa.other.FileUpload;
 
 public class Reservation {
     private int id;

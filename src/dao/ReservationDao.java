@@ -8,7 +8,7 @@ import models.Passager;
 import models.Reservation;
 import models.Utilisateur;
 import models.Vol;
-import other.FileUpload;
+import mg.itu.nyantsa.other.FileUpload;
 import utils.connection.PostgresConnection;
 
 public class ReservationDao {

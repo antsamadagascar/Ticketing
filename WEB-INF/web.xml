@@ -6,7 +6,7 @@
     
     <servlet>
         <servlet-name>FrontController</servlet-name>
-        <servlet-class>servlet.FrontController</servlet-class>
+        <servlet-class>mg.itu.nyantsa.servlet.FrontController</servlet-class>
         <!-- Ajout d'un paramètre d'initialisation -->
         <init-param>
             <param-name>base_package</param-name>

@@ -3,11 +3,11 @@ package controller;
 import dao.PromotionVolDAO;
 import dao.TypeSiegeDAO;
 import dao.VolDao;
-import exception.ValidationError;
+import mg.itu.nyantsa.exception.ValidationError;
 import models.PromotionVol;
 import models.TypeSiege;
 import models.Vol;
-import other.ModelView;
+import mg.itu.nyantsa.other.ModelView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,12 +15,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import annotation.Controller;
-import annotation.Param;
-import annotation.auth.Authentification;
-import annotation.methods.Get;
-import annotation.methods.Post;
-import annotation.methods.Url;
+import mg.itu.nyantsa.annotation.Controller;
+import mg.itu.nyantsa.annotation.Param;
+import mg.itu.nyantsa.annotation.auth.Authentification;
+import mg.itu.nyantsa.annotation.methods.Get;
+import mg.itu.nyantsa.annotation.methods.Post;
+import mg.itu.nyantsa.annotation.methods.Url;
 
 @Controller("PromotionController")
 @Authentification("manager") 
