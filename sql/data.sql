@@ -67,56 +67,22 @@ INSERT INTO vol (numero_vol, ville_depart_id, ville_arrivee_id, date_depart, dat
 VALUES ('AF123', 1, 2, NOW(), NOW() + INTERVAL '5 hours', 1, 0);
 
 
-INSERT INTO siege_vol (vol_id, siege_id, est_promotion, taux_promotion, prix_base, prix_final, est_disponible) VALUES
--- Sièges Économique (avec 10% de promotion)
-(1, 1, TRUE, 10.00, 200.00, 180.00, TRUE),
-(1, 2, TRUE, 10.00, 200.00, 180.00, TRUE),
-(1, 3, TRUE, 10.00, 200.00, 180.00, TRUE),
-(1, 4, TRUE, 10.00, 200.00, 180.00, TRUE),
-(1, 5, TRUE, 10.00, 200.00, 180.00, TRUE),
--- Sièges Premium (sans promotion)
-(1, 6, FALSE, 0.00, 350.00, 350.00, TRUE),
-(1, 7, FALSE, 0.00, 350.00, 350.00, TRUE),
-(1, 8, FALSE, 0.00, 350.00, 350.00, TRUE),
-(1, 9, FALSE, 0.00, 350.00, 350.00, TRUE),
-(1, 10, FALSE, 0.00, 350.00, 350.00, TRUE),
--- Sièges Business (sans promotion)
-(1, 11, FALSE, 0.00, 800.00, 800.00, TRUE),
-(1, 12, FALSE, 0.00, 800.00, 800.00, TRUE),
-(1, 13, FALSE, 0.00, 800.00, 800.00, TRUE),
-(1, 14, FALSE, 0.00, 800.00, 800.00, TRUE),
-(1, 15, FALSE, 0.00, 800.00, 800.00, TRUE);
-
-
--- Étape 1 : Insérer la réservation
-INSERT INTO reservation (utilisateur_id, vol_id, date_reservation, statut, nombre_passager, montant_total)
-VALUES (1, 1, NOW() + INTERVAL '3 hours', TRUE, 6, 0) -- montant_total sera mis à jour par le trigger
-RETURNING id; -- Notez l'ID généré (par exemple, 1)
-
--- Étape 2 : Insérer les passagers
-INSERT INTO passager (reservation_id, nom, prenom, date_naissance, passeport_file_data) VALUES
-(1, 'Ratovonandrasana', 'Faustin Desire', '1977-08-22', 'passeport1.png'),
-(1, 'Ramihajanirina', 'Rasoloniaina', '1985-01-01', 'passeport2.png'),
-(1, 'Ratovonandrasana', 'Aina Ny Antsa', '2015-01-01', 'passeport3.png'),
-(1, 'Ramihajanirina', 'Aina Sariaka', '2016-01-01', 'passeport4.png'),
-(1, 'Ratovoniaina', 'Ny Faneva', '2017-01-01', 'passeport5.png');
-(1, 'Ramihajanirina', 'Tsikiniaina', '2017-01-01', 'passeport5.png');
-
-
-RETURNING id; -- Notez les IDs générés (par exemple, 1, 2, 3, 4, 5)
-
--- Étape 3 : Insérer les détails de la réservation
-INSERT INTO detail_reservation (reservation_id, siege_vol_id, prix_unitaire, passager_id) VALUES
-(1, 1, 800.00, 1),
-(1, 2, 800.00, 2),
-(1, 3, 144.00, 3),
-(1, 4, 144.00, 4),
-(1, 6, 280.00, 5);
-
--- Vérifier le montant_total (mis à jour par le trigger)
-SELECT montant_total FROM reservation WHERE id = 1; -- Devrait retourner 2312.00
-
-INSERT INTO promotion_vol (vol_id, type_siege_id, taux_promotion, date_debut, date_fin) VALUES
-(1, 2, 10, '2023-12-01 00:00:00', '2023-12-31 23:59:59'); 
-
-Insert into regle_prix (age_min,age_max,pourcentage_prix)  values (5,13,30);
+-- INSERT INTO siege_vol (vol_id, siege_id, est_promotion, taux_promotion, prix_base, prix_final, est_disponible) VALUES
+-- -- Sièges Économique (avec 10% de promotion)
+-- (1, 1, TRUE, 10.00, 200.00, 180.00, TRUE),
+-- (1, 2, TRUE, 10.00, 200.00, 180.00, TRUE),
+-- (1, 3, TRUE, 10.00, 200.00, 180.00, TRUE),
+-- (1, 4, TRUE, 10.00, 200.00, 180.00, TRUE),
+-- (1, 5, TRUE, 10.00, 200.00, 180.00, TRUE),
+-- -- Sièges Premium (sans promotion)
+-- (1, 6, FALSE, 0.00, 350.00, 350.00, TRUE),
+-- (1, 7, FALSE, 0.00, 350.00, 350.00, TRUE),
+-- (1, 8, FALSE, 0.00, 350.00, 350.00, TRUE),
+-- (1, 9, FALSE, 0.00, 350.00, 350.00, TRUE),
+-- (1, 10, FALSE, 0.00, 350.00, 350.00, TRUE),
+-- -- Sièges Business (sans promotion)
+-- (1, 11, FALSE, 0.00, 800.00, 800.00, TRUE),
+-- (1, 12, FALSE, 0.00, 800.00, 800.00, TRUE),
+-- (1, 13, FALSE, 0.00, 800.00, 800.00, TRUE),
+-- (1, 14, FALSE, 0.00, 800.00, 800.00, TRUE),
+-- (1, 15, FALSE, 0.00, 800.00, 800.00, TRUE);
