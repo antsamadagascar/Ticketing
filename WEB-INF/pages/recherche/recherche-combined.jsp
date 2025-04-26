@@ -3,6 +3,12 @@
 <%@ page import="models.Ville" %>
 <%@ page import="models.TypeSiege" %>
 <%@ page import="models.VolMulticritereResult" %>
+<%
+    java.time.LocalDateTime now = java.time.LocalDateTime.now();
+    java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    String dateTimeNow = now.format(formatter);
+%>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -341,8 +347,11 @@
                             <label for="dateDepart">
                                 <i class="fas fa-calendar-alt"></i> Date de départ
                             </label>
-                            <input type="datetime-local" class="form-control" id="dateDepart" name="dateDepart">
+                            <input type="datetime-local" class="form-control" id="dateDepart" name="dateDepart"
+                                   value="<%= dateTimeNow %>">
                         </div>
+                        
+                        
                         
                         <div class="form-group">
                             <label for="typeSiege">

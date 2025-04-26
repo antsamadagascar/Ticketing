@@ -66,12 +66,6 @@ INSERT INTO siege (numero, avion_type_siege_id, is_disponible) VALUES
 INSERT INTO vol (numero_vol, ville_depart_id, ville_arrivee_id, date_depart, date_arrivee, avion_id, statut)
 VALUES ('AF123', 1, 2, NOW(), NOW() + INTERVAL '5 hours', 1, 0);
 
-INSERT INTO regle_reservation (heures_avant_vol, active) VALUES
-(1, TRUE); 
-
-INSERT INTO regle_annulation (heures_apres_reservation, active) VALUES
-(1, TRUE); 
-
 
 INSERT INTO siege_vol (vol_id, siege_id, est_promotion, taux_promotion, prix_base, prix_final, est_disponible) VALUES
 -- Sièges Économique (avec 10% de promotion)
