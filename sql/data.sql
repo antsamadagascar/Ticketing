@@ -17,7 +17,7 @@ INSERT INTO ville (nom, code_aeroport, pays, fuseau_horaire) VALUES
 -- ('Tokyo', 'HND', 'Japon', 'Asia/Tokyo'),
 -- ('Casablanca', 'CMN', 'Maroc', 'Africa/Casablanca'),
 -- ('Dubai', 'DXB', 'Émirats Arabes Unis', 'Asia/Dubai'),
--- ('Londres', 'LHR', 'Royaume-Uni', 'Europe/London'),
+-- ('Londres', 'LHR', 'Royaume-Uni', 'Europe/London'), 
 -- ('Madrid', 'MAD', 'Espagne', 'Europe/Madrid'),
 -- ('Rome', 'FCO', 'Italie', 'Europe/Rome'),
 -- ('Berlin', 'BER', 'Allemagne', 'Europe/Berlin'),
