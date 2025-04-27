@@ -7,6 +7,10 @@ import mg.itu.nyantsa.annotation.methods.Get;
 import mg.itu.nyantsa.annotation.methods.Post;
 import mg.itu.nyantsa.annotation.methods.RestApi;
 import mg.itu.nyantsa.annotation.methods.Url;
+import mg.itu.nyantsa.other.FileUpload;
+import mg.itu.nyantsa.other.ModelView;
+import mg.itu.nyantsa.other.MySession;
+
 import dao.ReservationDao;
 import dao.SiegeVolDAO;
 import dao.VolDao;
@@ -15,9 +19,6 @@ import models.Reservation;
 import models.SiegeVol;
 import models.Utilisateur;
 import models.Vol;
-import mg.itu.nyantsa.other.FileUpload;
-import mg.itu.nyantsa.other.ModelView;
-import mg.itu.nyantsa.other.MySession;
 import utils.connection.PostgresConnection;
 
 import java.io.IOException;

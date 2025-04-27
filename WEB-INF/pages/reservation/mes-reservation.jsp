@@ -70,9 +70,12 @@
                         <i class="fas fa-users"></i> Passagers
                     </a>
                     
-                    <a href="http://localhost:8080/reservations/pdf/<%= r.getId() %>" class="pdf-btn" title="Télécharger PDF">
+                   <!-- Nouveau bouton -->
+                    <button class="pdf-btn" data-id="<%= r.getId() %>" data-user="${sessionScope.authUser.id}" title="Télécharger PDF">
                         <i class="fas fa-file-pdf"></i> PDF
-                    </a>
+                        <span class="download-status" style="display:none; margin-left:5px; font-style: italic; font-size: 0.9em;">Téléchargement...</span>
+                    </button>
+
                     
                     <% if (r.isStatut()) { %>
                         <form action="/Ticketing/reservation/annuler" method="post" style="display: inline;">
@@ -93,12 +96,50 @@
         </div>
         <% } %>
     </div>
-
     <script>
-        // Add fade effect to alerts
         document.addEventListener('DOMContentLoaded', function() {
+            // Fonction pour afficher un message d’alerte dynamique dans la page
+            function showAlert(message, type = 'error') {
+                let alertContainer = document.querySelector('.dynamic-alert');
+                if (!alertContainer) {
+                    alertContainer = document.createElement('div');
+                    alertContainer.className = 'dynamic-alert';
+                    alertContainer.style.position = 'fixed';
+                    alertContainer.style.top = '10px';
+                    alertContainer.style.right = '10px';
+                    alertContainer.style.zIndex = '9999';
+                    alertContainer.style.minWidth = '250px';
+                    document.body.appendChild(alertContainer);
+                }
+    
+                const alert = document.createElement('div');
+                alert.textContent = message;
+                alert.style.padding = '10px';
+                alert.style.marginBottom = '10px';
+                alert.style.borderRadius = '5px';
+                alert.style.color = '#fff';
+                alert.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
+                alert.style.opacity = '1';
+                alert.style.transition = 'opacity 1s ease';
+    
+                if (type === 'success') {
+                    alert.style.backgroundColor = '#4CAF50'; // vert
+                } else if (type === 'info') {
+                    alert.style.backgroundColor = '#2196F3'; // bleu
+                } else {
+                    alert.style.backgroundColor = '#f44336'; // rouge
+                }
+    
+                alertContainer.appendChild(alert);
+    
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 1000);
+                }, 5000);
+            }
+    
+            // Fade out des alertes classiques existantes
             const alerts = document.querySelectorAll('.alert');
-            
             alerts.forEach(alert => {
                 setTimeout(() => {
                     alert.style.transition = 'opacity 1s';
@@ -108,7 +149,69 @@
                     }, 1000);
                 }, 5000);
             });
+    
+            // Gestion du clic sur les boutons PDF
+            const pdfButtons = document.querySelectorAll('.pdf-btn');
+            pdfButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const reservationId = this.dataset.id;
+                    console.log('Reservation ID:', reservationId);
+    
+                    if (!reservationId) {
+                        showAlert("ID de réservation manquant.", "error");
+                        return;
+                    }
+     
+                    const userId = this.dataset.user;
+
+                    const url = "http://localhost:8080/reservations/pdf/" + reservationId + "/" + userId;
+
+                    showAlert("Téléchargement du PDF en cours...", "info");
+    
+                    fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/pdf'
+                        },
+                        credentials: 'include'
+                    })
+                    .then(response => {
+                        const contentType = response.headers.get('Content-Type') || '';
+    
+                        if (response.status === 401) {
+                            throw new Error("Session expirée, veuillez vous reconnecter.");
+                        }
+    
+                        if (!response.ok) {
+                            throw new Error("Erreur lors de la récupération du PDF.");
+                        }
+    
+                        // Si la réponse n'est pas un PDF,  redirection vers login
+                        if (!contentType.includes('application/pdf')) {
+                            throw new Error("Vous devez être connecté pour télécharger ce document.");
+                        }
+    
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        const blobUrl = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = blobUrl;
+                        a.download = `reservation_${reservationId}.pdf`;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(blobUrl);
+                        showAlert("Téléchargement terminé.", "success");
+                    })
+                    .catch(error => {
+                        showAlert(error.message, "error");
+                    });
+                });
+            });
         });
     </script>
+    
 </body>
 </html>
