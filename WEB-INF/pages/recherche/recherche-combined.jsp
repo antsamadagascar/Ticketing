@@ -415,7 +415,7 @@
                                         <th>Départ</th>
                                         <th>Arrivée</th>
                                         <th>Type de siège</th>
-                                        <th>Prix(€)</th>
+                                        <th>Prix($)</th>
                                         <th>Nombre siège disponible</th>
                                         <th>Promotion</th>
                                          <th>Actions</th>

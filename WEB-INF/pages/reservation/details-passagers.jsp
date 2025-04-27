@@ -62,7 +62,7 @@
                 <div class="info-item">
                     <i class="fas fa-euro-sign"></i>
                     <div>
-                        <strong>Montant total:</strong> <%= reservation.getMontantTotal() %> €
+                        <strong>Montant total:</strong> <%= reservation.getMontantTotal() %> $
                     </div>
                 </div>
                 <div class="info-item">

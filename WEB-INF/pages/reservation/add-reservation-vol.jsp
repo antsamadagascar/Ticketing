@@ -145,7 +145,7 @@
                             </div>
                             <div class="col-md-6 text-md-end">
                                 <p class="mb-1">Prix total</p>
-                                <p class="price-total"><span id="prixTotal">0</span> €</p>
+                                <p class="price-total"><span id="prixTotal">0</span> $</p>
                             </div>
                         </div>
                         <div class="text-center mt-4">
@@ -307,7 +307,7 @@
         
                     const titleElement = document.createElement("h3");
 
-                    const prix = `${sieges[0].prix.toFixed(2)} €`;
+                    const prix = `${sieges[0].prix.toFixed(2)} $`;
                     // console.log("Type:", type);
                     // console.log("Premier siège du type:", sieges[0]);
                     // console.log("Prix brut:", sieges[0].prix);
