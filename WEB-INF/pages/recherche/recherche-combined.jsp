@@ -417,7 +417,7 @@
                                         <th>Type de siège</th>
                                         <th>Prix</th>
                                         <th>Promotion</th>
-                                      <!--<th>Actions</th> -->
+                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -455,13 +455,12 @@
                                                     }
                                                 %>
                                             </td>
-                                            
-                                           <!--<td>
-                                                <button class="btn btn-primary" style="padding: 0.5rem 0.75rem; font-size: 0.875rem;">
-                                                    <i class="fas fa-ticket-alt"></i> Réserver
-                                                </button>
+                                           <td>
+                                                <a href="${pageContext.request.contextPath}/reservation-vol" class="btn btn-primary  style="padding: 0.5rem 0.75rem; font-size: 0.875rem;">
+                                                    <i class="fas fa-ticket-alt"></i> reservation 
+                                                </a>
                                             </td>
-                                        -->
+                                       
                                         </tr>
                                     <% } %>
                                 </tbody>

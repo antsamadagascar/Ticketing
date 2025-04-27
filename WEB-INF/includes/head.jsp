@@ -7,7 +7,7 @@
 
     <!-- Styles CSS -->
     <link href="<%= request.getContextPath() %>/assets/css/bootstrap.min.css" rel="stylesheet"> <!-- Bootstrap -->
-    <link href="<%= request.getContextPath() %>/assets/css/app.css" rel="stylesheet"> <!-- CSS personnalisé -->
+    <link href="<%= request.getContextPath() %>/assets/css/template/app.css" rel="stylesheet"> <!-- CSS personnalisé -->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/font-awesome/css/all.min.css"> <!-- Font Awesome -->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/jquery.dataTables.min.css"> <!-- DataTables -->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/buttons/2.3.6/css/buttons.dataTables.min.css"> <!-- DataTables Buttons -->

@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Vols - SkyManager</title>
 </head>
-<link href="<%= request.getContextPath() %>/assets/css/vols.css" rel="stylesheet"> 
+<link href="<%= request.getContextPath() %>/assets/css/vols/vols.css" rel="stylesheet"> 
 <body>
     <!-- En-tête -->
     <header class="header">

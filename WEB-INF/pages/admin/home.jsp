@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Administration</title>
-    <link href="${pageContext.request.contextPath}/assets/css/all.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/assets/css/home.admin.css" rel="stylesheet">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/font-awesome/css/all.min.css"> 
+    <link href="${pageContext.request.contextPath}/assets/css/home/home.css" rel="stylesheet">
 </head>
 <body>
     <div class="dashboard-container">
