@@ -9,165 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Réservations</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #4a6fa5;
-            --primary-dark: #365986;
-            --secondary: #6c757d;
-            --success: #28a745;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --light: #f8f9fa;
-            --dark: #343a40;
-            --gray-100: #f8f9fa;
-            --gray-200: #e9ecef;
-            --gray-300: #dee2e6;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-        }
-
-        h2 {
-            color: var(--primary);
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--gray-200);
-            text-align: center;
-            font-size: 28px;
-        }
-
-        .alert {
-            padding: 12px 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-weight: 500;
-        }
-
-        .success {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: var(--success);
-            border-left: 4px solid var(--success);
-        }
-
-        .error {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: var(--danger);
-            border-left: 4px solid var(--danger);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--gray-300);
-        }
-
-        th {
-            background-color: var(--primary);
-            color: white;
-            font-weight: 500;
-        }
-
-        tr:hover {
-            background-color: var(--gray-100);
-        }
-
-        .no-reservations {
-            text-align: center;
-            padding: 40px 0;
-            color: var(--secondary);
-            font-size: 18px;
-        }
-
-        .cancel-btn {
-            background-color: var(--danger);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .cancel-btn:hover {
-            background-color: #bd2130;
-        }
-
-        .pdf-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            margin-right: 5px;
-        }
-
-        .pdf-btn:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .action-column {
-            display: flex;
-            gap: 5px;
-        }
-
-        .status-confirmed {
-            color: var(--success);
-            font-weight: 500;
-        }
-
-        .status-cancelled {
-            color: var(--danger);
-            font-weight: 500;
-        }
-
-        @media (max-width: 1024px) {
-            .container {
-                width: 95%;
-                padding: 15px;
-            }
-            
-            table {
-                display: block;
-                overflow-x: auto;
-            }
-        }
-
-        @media (max-width: 768px) {
-            th, td {
-                padding: 10px;
-            }
-            
-            h2 {
-                font-size: 24px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/mes-reservations.css" >
 </head>
 <body>
     <div class="container">
@@ -224,11 +66,17 @@
                     <% } %>
                 </td>
                 <td class="action-column">
+                    <!-- Nouveau lien pour voir les passagers -->
+                    <a href="/Ticketing/reservation/passagers?reservationId=<%= r.getId() %>&volId=<%= vol.getId() %>" class="passengers-btn" title="Voir les passagers">
+                        <i class="fas fa-users"></i> Passagers
+                    </a>
+                    
                     <a href="http://localhost:8080/reservations/pdf/<%= r.getId() %>" class="pdf-btn" title="Télécharger PDF">
                         <i class="fas fa-file-pdf"></i> PDF
                     </a>
+                    
                     <% if (r.isStatut()) { %>
-                        <form action="/Ticketing/reservation/annuler" method="post">
+                        <form action="/Ticketing/reservation/annuler" method="post" style="display: inline;">
                             <input type="hidden" name="reservationId" value="<%= r.getId() %>">
                             <button type="submit" class="cancel-btn" title="Annuler la réservation">
                                 <i class="fas fa-ban"></i> Annuler

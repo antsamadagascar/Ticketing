@@ -1,6 +1,7 @@
 package models;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import mg.itu.nyantsa.other.FileUpload;
 
@@ -13,6 +14,7 @@ public class Reservation {
     private int nombrePassager;
     private Double montantTotal;
     private FileUpload passFileUpload;
+    private List<Passager> passagers;
 
     public int getId() {
         return id;
@@ -78,6 +80,13 @@ public class Reservation {
          this.passFileUpload = passFileUpload;
      }
 
+     public List<Passager> getPassagers() {
+        return passagers;
+    }
+    
+    public void setPassagers(List<Passager> passagers) {
+        this.passagers = passagers;
+    }
 }
 
 

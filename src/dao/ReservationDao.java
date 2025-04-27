@@ -8,7 +8,6 @@ import models.Passager;
 import models.Reservation;
 import models.Utilisateur;
 import models.Vol;
-import mg.itu.nyantsa.other.FileUpload;
 import utils.connection.PostgresConnection;
 
 public class ReservationDao {
@@ -63,14 +62,6 @@ public class ReservationDao {
                     reservation.setDateReservation(rs.getTimestamp("date_reservation"));
                     reservation.setStatut(rs.getBoolean("statut_reservation"));
                     reservation.setNombrePassager(rs.getInt("nombre_passager"));
-                    // String basePath = "/Ticketing/upload/utilisateur_" + userId + "/vol_" + rs.getInt("volId") + "/reservation_" + rs.getInt("reservation_id") + "/";
-                    // String fileName = rs.getString("passeport_file_data");
-
-                    // if (fileName != null && !fileName.isEmpty()) {
-                    //     FileUpload passeport = new FileUpload();
-                    //     passeport.setFilePath(basePath + fileName);
-                    //     reservation.setPassFileUpload(passeport);
-                    // }
 
                     Utilisateur utilisateur = new Utilisateur();
                     utilisateur.setId(rs.getInt("id"));
@@ -109,87 +100,90 @@ public class ReservationDao {
         }
     }
 
-    public int creerReservation(int idUtilisateur, int idVol,Timestamp dateReservation, List<Passager> passagers,
-                            List<Integer> siegeIds) throws SQLException {
-    String sqlReservation = "INSERT INTO reservation (utilisateur_id, vol_id,date_reservation,nombre_passager) VALUES (?,?, ?, ?) RETURNING id";
-    String sqlDetails = "INSERT INTO detail_reservation (reservation_id, siege_vol_id, passager_id) VALUES (?, ?, ?)";
-
-    try (Connection connection = PostgresConnection.getConnection()) {
-        connection.setAutoCommit(false);
-        PassagerDao passagerDao = new PassagerDao(connection);
-
-        try (PreparedStatement stmtReservation = connection.prepareStatement(sqlReservation)) {
-            stmtReservation.setInt(1, idUtilisateur);
-            stmtReservation.setInt(2, idVol);
-            stmtReservation.setTimestamp(3, dateReservation);            
-            stmtReservation.setInt(4, passagers.size());
-
-            System.out.println(">> Requête RESERVATION : " +
-                "INSERT INTO reservation (utilisateur_id, vol_id,date_reservation,nombre_passager) VALUES (" +
-                idUtilisateur + ", " + idVol + ", " + dateReservation +",  " + passagers.size() + ")");
-
-            ResultSet rs = stmtReservation.executeQuery();
-            if (!rs.next()) {
-                throw new SQLException("Échec de la création de la réservation, aucun ID retourné");
-            }
-
-            int reservationId = rs.getInt("id");
-
-            List<Integer> passagerIds = new ArrayList<>();
-            for (Passager passager : passagers) {
-                int passagerId = passagerDao.creerPassager(
-                    reservationId,
-                    passager.getNom(),
-                    passager.getPrenom(),
-                    passager.getDateNaissance(),
-                    passager.getPasseportFileName()
-                );
-                passagerIds.add(passagerId);
-
-                System.out.println(">> Requête PASSAGER : " +
-                    "INSERT INTO passager (reservation_id, nom, prenom, date_naissance, passeport) VALUES (" +
-                    reservationId + ", '" + passager.getNom() + "', '" + passager.getPrenom() + "', '" +
-                    passager.getDateNaissance() + "', '" + passager.getPasseportFileName() + "')");
-            }
-
-            try (PreparedStatement stmtDetails = connection.prepareStatement(sqlDetails)) {
-                for (int i = 0; i < siegeIds.size(); i++) {
-                    stmtDetails.setInt(1, reservationId);
-                    stmtDetails.setInt(2, siegeIds.get(i));
-                    stmtDetails.setInt(3, passagerIds.get(i));
-
-                    System.out.println(">> Requête DETAIL : " +
-                        "INSERT INTO detail_reservation (reservation_id, siege_vol_id, passager_id) VALUES (" +
-                        reservationId + ", " + siegeIds.get(i) + ", " + passagerIds.get(i) + ")");
-
-                    stmtDetails.executeUpdate();
+    // Méthode pour effectuer un reservation et qui retourne les passagers avec leurs IDs
+    public List<Passager> creerReservation(int idUtilisateur, int idVol, Timestamp dateReservation, 
+                                        List<Passager> passagers, List<Integer> siegeIds) throws SQLException {
+        String sqlReservation = "INSERT INTO reservation (utilisateur_id, vol_id,date_reservation,nombre_passager) VALUES (?,?, ?, ?) RETURNING id";
+        String sqlDetails = "INSERT INTO detail_reservation (reservation_id, siege_vol_id, passager_id) VALUES (?, ?, ?)";
+        
+        try (Connection connection = PostgresConnection.getConnection()) {
+            connection.setAutoCommit(false);
+            PassagerDao passagerDao = new PassagerDao(connection);
+            
+            try (PreparedStatement stmtReservation = connection.prepareStatement(sqlReservation)) {
+                stmtReservation.setInt(1, idUtilisateur);
+                stmtReservation.setInt(2, idVol);
+                stmtReservation.setTimestamp(3, dateReservation);            
+                stmtReservation.setInt(4, passagers.size());
+                
+                System.out.println(">> Requête RESERVATION : " +
+                    "INSERT INTO reservation (utilisateur_id, vol_id,date_reservation,nombre_passager) VALUES (" +
+                    idUtilisateur + ", " + idVol + ", " + dateReservation +",  " + passagers.size() + ")");
+                
+                ResultSet rs = stmtReservation.executeQuery();
+                if (!rs.next()) {
+                    throw new SQLException("Échec de la création de la réservation, aucun ID retourné");
                 }
+                int reservationId = rs.getInt("id");
+                
+                // Liste pour stocker les passagers avec leurs vrais IDs
+                List<Passager> passagersAvecIds = new ArrayList<>();
+                List<Integer> passagerIds = new ArrayList<>();
+                
+                // Crée les passagers et construire la liste avec les vrais IDs
+                for (Passager passager : passagers) {
+                    int passagerId = passagerDao.creerPassager(
+                        reservationId,
+                        passager.getNom(),
+                        passager.getPrenom(),
+                        passager.getDateNaissance(),
+                        passager.getPasseportFileName()
+                    );
+                    passagerIds.add(passagerId);
+                    
+                    // Crée un nouveau passager avec l'ID réel
+                    Passager passagerAvecId = new Passager(
+                        passagerId, 
+                        reservationId, 
+                        passager.getNom(), 
+                        passager.getPrenom(), 
+                        passager.getDateNaissance(), 
+                        passager.getPasseportFileName()
+                    );
+                    passagersAvecIds.add(passagerAvecId);
+                    
+                    System.out.println(">> Requête PASSAGER : " +
+                        "INSERT INTO passager (reservation_id, nom, prenom, date_naissance, passeport) VALUES (" +
+                        reservationId + ", '" + passager.getNom() + "', '" + passager.getPrenom() + "', '" +
+                        passager.getDateNaissance() + "', '" + passager.getPasseportFileName() + "')");
+                }
+                
+                // Crée les détails de réservation
+                try (PreparedStatement stmtDetails = connection.prepareStatement(sqlDetails)) {
+                    for (int i = 0; i < siegeIds.size(); i++) {
+                        stmtDetails.setInt(1, reservationId);
+                        stmtDetails.setInt(2, siegeIds.get(i));
+                        stmtDetails.setInt(3, passagerIds.get(i));
+                        
+                        System.out.println(">> Requête DETAIL : " +
+                            "INSERT INTO detail_reservation (reservation_id, siege_vol_id, passager_id) VALUES (" +
+                            reservationId + ", " + siegeIds.get(i) + ", " + passagerIds.get(i) + ")");
+                        
+                        stmtDetails.executeUpdate();
+                    }
+                }
+                
+                connection.commit();
+                return passagersAvecIds; // Retourne les passagers avec leurs  IDs
+                
+            } catch (SQLException e) {
+                connection.rollback();
+                e.printStackTrace();
+                throw e;
             }
-
-            connection.commit();
-            return reservationId;
-        } catch (SQLException e) {
-            connection.rollback();
-            e.printStackTrace();
-            throw e;
         }
     }
-}
 
-    
-    public String getPasseportFilePath(int reservationId) throws SQLException {
-        String sql = "SELECT passeport_file_path FROM reservation WHERE id = ?";
-        try (Connection connection = PostgresConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, reservationId);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getString("passeport_file_path");
-                }
-            }
-        }
-        return null; 
-    }
     public int getNextReservationId() throws SQLException {
         String sql = "SELECT nextval('reservation_id_seq')"; 
         try (Connection connection = PostgresConnection.getConnection();
@@ -226,5 +220,61 @@ public class ReservationDao {
         }
     }
 
+    public List<Passager> getPassagersParReservation(int reservationId) throws SQLException {
+        List<Passager> passagers = new ArrayList<>();
+        String sql = "SELECT * FROM passager WHERE reservation_id = ?";
+        
+        try (Connection conn = PostgresConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             
+            stmt.setInt(1, reservationId);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Passager p = new Passager();
+                    p.setId(rs.getInt("id"));
+                    p.setNom(rs.getString("nom"));
+                    p.setPrenom(rs.getString("prenom"));
+                    p.setDateNaissance(rs.getDate("date_naissance"));
+                    p.setPasseportFileName(rs.getString("passeport_file_data"));
+                    passagers.add(p);
+                }
+            }
+        }
+    
+        return passagers;
+    }    
+
+    public String getPasseportFilePath(int reservationId) throws SQLException {
+        String sql = "SELECT p.passeport_file_data, r.utilisateur_id, r.vol_id " +
+                    "FROM passager p " +
+                    "JOIN reservation r ON p.reservation_id = r.id " +
+                    "WHERE r.id = ? LIMIT 1";
+        
+        try (Connection conn = PostgresConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, reservationId);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String fileName = rs.getString("passeport_file_data");
+                    int userId = rs.getInt("utilisateur_id");
+                    int volId = rs.getInt("vol_id");
+                    
+                    if (fileName != null && !fileName.isEmpty()) {
+                        String basePath = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\data_reservation_ticketing\\";
+                        return basePath + "utilisateur_" + userId + 
+                            "\\vol_" + volId + 
+                            "\\reservation_" + reservationId + 
+                            "\\" + fileName;
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
+    
 }
 
