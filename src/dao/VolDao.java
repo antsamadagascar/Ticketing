@@ -11,7 +11,7 @@ import utils.connection.PostgresConnection;
 public class VolDao {
     public List<Vol> getAll() {
         List<Vol> vols = new ArrayList<>();
-        String query = "SELECT v.id, v.numero_vol, vd.id AS ville_depart_id, vd.nom AS ville_depart_nom, va.id AS ville_arrivee_id, va.nom AS ville_arrivee_nom, v.date_depart, v.date_arrivee, a.id AS avion_id, a.modele, v.statut FROM vol v JOIN ville vd ON v.ville_depart_id = vd.id JOIN ville va ON v.ville_arrivee_id = va.id JOIN avion a ON v.avion_id = a.id";
+        String query = "SELECT v.id, v.numero_vol, vd.id AS ville_depart_id, vd.nom AS ville_depart_nom, va.id AS ville_arrivee_id, va.nom AS ville_arrivee_nom, v.date_depart, v.date_arrivee, a.id AS avion_id, a.modele, v.statut FROM vol v JOIN ville vd ON v.ville_depart_id = vd.id JOIN ville va ON v.ville_arrivee_id = va.id JOIN avion a ON v.avion_id = a.id WHERE v.statut = 0";
         
         try (Connection conn = PostgresConnection.getConnection();
              Statement stmt = conn.createStatement();

@@ -1,8 +1,8 @@
-INSERT INTO utilisateur (email, mot_de_passe, nom, prenom, date_naissance, telephone, role, date_creation) 
-VALUES 
-('antsamadagascar@gmail.com', crypt('1234', gen_salt('bf')), 'Ratovonandrasana', 'Aina Ny Antsa','2005-07-29' , '1234567890', 'manager', NOW()),
-('landy@gmail.com', crypt('1234', gen_salt('bf')), 'raisoa', 'landy', NULL, '0987654321', 'user', NOW()),
-('ivo@gmail.com', crypt('1234', gen_salt('bf')), 'kilonga', 'mihary', NULL, '1122334455', 'user', NOW());
+-- INSERT INTO utilisateur (email, mot_de_passe, nom, prenom, date_naissance, telephone, role, date_creation) 
+-- VALUES 
+-- ('antsamadagascar@gmail.com', crypt('1234', gen_salt('bf')), 'Ratovonandrasana', 'Aina Ny Antsa','2005-07-29' , '1234567890', 'manager', NOW()),
+-- ('landy@gmail.com', crypt('1234', gen_salt('bf')), 'raisoa', 'landy', NULL, '0987654321', 'user', NOW()),
+-- ('ivo@gmail.com', crypt('1234', gen_salt('bf')), 'kilonga', 'mihary', NULL, '1122334455', 'user', NOW());
 
 INSERT INTO avion (modele, date_fabrication) VALUES
 ('Boeing 737', '2020-01-15');
