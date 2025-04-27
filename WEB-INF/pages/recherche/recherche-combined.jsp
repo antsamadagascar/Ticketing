@@ -415,7 +415,8 @@
                                         <th>Départ</th>
                                         <th>Arrivée</th>
                                         <th>Type de siège</th>
-                                        <th>Prix</th>
+                                        <th>Prix(€)</th>
+                                        <th>Nombre siège disponible</th>
                                         <th>Promotion</th>
                                          <th>Actions</th>
                                     </tr>
@@ -436,9 +437,10 @@
                                             <td><%= vol.getTypeSiege().getNom() %></td>
                                             <td>
                                                 <span class="price-range">
-                                                    <%= vol.getPrixMinimum() %> - <%= vol.getPrixMaximum() %> €
+                                                    <%= vol.getPrixMinimum() %> - <%= vol.getPrixMaximum() %>
                                                 </span>
                                             </td>
+                                            <td> <%= vol.getNombreSiegesDisponibles() %></td>
                                             <td>
                                                 <%
                                                     Boolean estEnPromo = vol.isEstEnPromotion();

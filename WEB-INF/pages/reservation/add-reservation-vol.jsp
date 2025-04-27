@@ -559,7 +559,7 @@
                             console.error(xhr.responseText);
                             submitBtn.innerHTML = originalBtnText;
                             submitBtn.disabled = false;
-}
+                        }
                     });
                 });
             },
