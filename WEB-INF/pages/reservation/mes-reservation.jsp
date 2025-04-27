@@ -47,7 +47,7 @@
             %>
             <tr>
                 <td><%= r.getId() %></td>
-                <td><%= r.getMontantTotal() %> €</td>
+                <td><%= r.getMontantTotal() %> $</td>
                 <td><%= r.getDateReservation() %></td>
                 <td><%= vol.getNumeroVol() %></td>
                 <td><%= vol.getDateDepart() %></td>

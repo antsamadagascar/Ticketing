@@ -162,6 +162,14 @@
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script type="application/json" id="response-data">
+        {
+            "success": ${success != null ? success : 'null'},
+            "messageError": "${messageError != null ? messageError : ''}",
+            "messageSuccess": "${messageSuccess != null ? messageSuccess : ''}"
+        }
+    </script>
+    
     <script>
         window.contextPath = "${pageContext.request.contextPath}";
         
@@ -539,28 +547,65 @@
                     passeportFiles.forEach(file => formData.append("passeport", file));
         
                     $.ajax({
-                        url: `${window.contextPath}/Ticketing/reservation/valider`,
-                        type: "POST",
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-
-                        success: (response) => {
-                            console.log("Réponse de succès reçue:", response);
-                            alert("Réservation effectuée avec succès! Vous allez être redirigé.", "success");
+                    url: `${window.contextPath}/Ticketing/reservation/valider`,
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: (response) => {
+                        console.log("Réponse reçue:", response);
+                        
+                        try {
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = response;
                             
+                            const dataScript = tempDiv.querySelector('#response-data');
+                            
+                            if (dataScript) {
+                                const responseData = JSON.parse(dataScript.textContent);
+                                console.log("Données extraites:", responseData);
+                                
+                                if (responseData.success === false || responseData.messageError) {
+                                    // Erreur
+                                    alert(responseData.messageError || "Erreur lors de la réservation", "danger");
+                                    submitBtn.innerHTML = originalBtnText;
+                                    submitBtn.disabled = false;
+                                } else if (responseData.success === true || responseData.messageSuccess) {
+                                    // Succès
+                                    alert(responseData.messageSuccess || "Réservation effectuée avec succès!", "success");
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 3000);
+                                } else {
+                                    // Cas indéterminé
+                                    alert("Réservation traitée", "info");
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 3000);
+                                }
+                            } else {
+                                console.log("Pas de données trouvées, comportement par défaut");
+                                alert("Réservation traitée", "info");
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 3000);
+                            }
+                        } catch (e) {
+                            console.error("Erreur lors du parsing:", e);
+                            alert("Réservation traitée", "info");
                             setTimeout(() => {
                                 location.reload();
                             }, 3000);
-                        },
-                        error: (xhr) => {
-                            console.log("Erreur reçue:", xhr);
-                            alert("Erreur lors de la réservation. Veuillez réessayer.", "danger");
-                            console.error(xhr.responseText);
-                            submitBtn.innerHTML = originalBtnText;
-                            submitBtn.disabled = false;
                         }
-                    });
+                    },
+                    error: (xhr) => {
+                        console.log("Erreur HTTP reçue:", xhr);
+                        alert("Erreur lors de la réservation. Veuillez réessayer.", "danger");
+                        console.error(xhr.responseText);
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.disabled = false;
+                    }
+                });
                 });
             },
             

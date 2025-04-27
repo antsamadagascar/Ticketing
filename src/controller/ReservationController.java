@@ -173,6 +173,7 @@ public class ReservationController {
         System.out.println("Début de la méthode validerReservation");
 
         if (passeports == null || passeports.isEmpty() || passeports.size() != nombrePassagers) {
+            mv.add("success", false); // Ajout de l'indicateur
             mv.add("messageError", "Veuillez fournir un fichier passeport pour chaque passager.");
             mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
             mv.add("pageContent", "/WEB-INF/pages/reservation/add-reservation-vol.jsp");
@@ -180,6 +181,7 @@ public class ReservationController {
         }
 
         if (siegeId == null || siegeId.size() != nombrePassagers) {
+            mv.add("success", false); // Ajout de l'indicateur
             mv.add("messageError", "Le nombre de sièges sélectionnés ne correspond pas.");
             mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
             mv.add("pageContent", "/WEB-INF/pages/reservation/add-reservation-vol.jsp");
@@ -196,6 +198,7 @@ public class ReservationController {
             List<Passager> passagers = objectMapper.readValue(passagersJson, objectMapper.getTypeFactory().constructCollectionType(List.class, Passager.class));
 
             if (passagers == null || passagers.size() != nombrePassagers) {
+                mv.add("success", false); // Ajout de l'indicateur
                 mv.add("messageError", "Le nombre de passagers ne correspond pas.");
                 mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
                 mv.add("pageContent", "/WEB-INF/pages/reservation/add-reservation-vol.jsp");
@@ -207,6 +210,7 @@ public class ReservationController {
                 if (p.getNom() == null || p.getNom().isEmpty() ||
                     p.getPrenom() == null || p.getPrenom().isEmpty() ||
                     p.getDateNaissance() == null) {
+                    mv.add("success", false); // Ajout de l'indicateur
                     mv.add("messageError", "Données incomplètes pour le passager " + (i + 1));
                     mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
                     mv.add("pageContent", "/WEB-INF/pages/reservation/add-reservation-vol.jsp");
@@ -219,6 +223,7 @@ public class ReservationController {
             }
         } catch (Exception e) {
             System.out.println("Erreur lors du parsing des passagers: " + e.getMessage());
+            mv.add("success", false); // Ajout de l'indicateur
             mv.add("messageError", "Erreur lors du parsing des données des passagers: " + e.getMessage());
             mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
             mv.add("pageContent", "/WEB-INF/pages/reservation/mes-reservation.jsp");
@@ -238,7 +243,11 @@ public class ReservationController {
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
-                    throw new IllegalArgumentException("Format de date invalide : " + dateReservationStr);
+                    mv.add("success", false); // Ajout de l'indicateur
+                    mv.add("messageError", "Format de date invalide : " + dateReservationStr);
+                    mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
+                    mv.add("pageContent", "/WEB-INF/pages/reservation/add-reservation-vol.jsp");
+                    return mv;
                 }
 
                 Timestamp dateReservation = new java.sql.Timestamp(utilDate.getTime());
@@ -254,13 +263,17 @@ public class ReservationController {
                     System.out.println("Passager avec ID réel : " + passager);
                     FileUpload passeport = passeports.get(i);
                     
-                    // Utilisation de l'ID réel du passager
                     int passagerId = passager.getId();
                     
                     saveFile(passeport, utilisateur.getId(), volId, passager.getReservationId(), passagerId);
                 }  
+                
+                // SUCCÈS - le point important
+                mv.add("success", true);
                 mv.add("messageSuccess", "Réservation effectuée avec succès !");
+                
             } catch (SQLException e) {
+                mv.add("success", false); // Ajout de l'indicateur
                 if (e.getMessage().toLowerCase().contains("réservation doit être faite")) {
                     try {
                         int heuresReservation = reservationDao.getHeuresReservation();
@@ -270,15 +283,18 @@ public class ReservationController {
                         mv.add("messageError", "Erreur lors de la vérification du délai de réservation.");
                     }
                 } else {
-                    mv.add("messageError", "Erreur lors de la réservation.");
+                    mv.add("messageError", "Erreur lors de la réservation: " + e.getMessage());
                 }
             } catch (IOException e) {
+                mv.add("success", false); // Ajout de l'indicateur
                 mv.add("messageError", "Erreur lors de l'enregistrement des fichiers passeport: " + e.getMessage());
             }
         } else {
+            mv.add("success", false); // Ajout de l'indicateur
             mv.add("messageError", "Utilisateur non authentifié.");
         }
 
+        // Retour standard à la fin
         mv.setUrl("/WEB-INF/pages/user/template-user.jsp");
         mv.add("pageContent", "/WEB-INF/pages/reservation/add-reservation-vol.jsp");
         return mv;
