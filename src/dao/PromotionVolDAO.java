@@ -15,10 +15,11 @@ public class PromotionVolDAO {
 
     public List<PromotionVol> getAll() {
         List<PromotionVol> promotions = new ArrayList<>();
-        String query = "SELECT pv.id, v.id AS vol_id, v.numero_vol, ts.id AS type_siege_id, ts.nom, pv.taux_promotion, pv.date_debut, pv.date_fin " +
-                       "FROM promotion_vol pv " +
-                       "JOIN vol v ON pv.vol_id = v.id " +
-                       "JOIN type_siege ts ON pv.type_siege_id = ts.id";
+        String query = "SELECT pv.id, v.id AS vol_id, v.numero_vol, ts.id AS type_siege_id, ts.nom, pv.taux_promotion, pv.date_debut, pv.date_fin, pv.est_active " +
+            "FROM promotion_vol pv " +
+            "JOIN vol v ON pv.vol_id = v.id " +
+            "JOIN type_siege ts ON pv.type_siege_id = ts.id";
+
         
         try (Connection connection = PostgresConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
@@ -41,6 +42,8 @@ public class PromotionVolDAO {
                 promotion.setTauxPromotion(rs.getDouble("taux_promotion"));
                 promotion.setDateDebut(rs.getTimestamp("date_debut"));
                 promotion.setDateFin(rs.getTimestamp("date_fin"));
+                promotion.setEstActive(rs.getBoolean("est_active"));
+
                 
                 promotions.add(promotion);
             }
@@ -67,7 +70,7 @@ public class PromotionVolDAO {
     }
 
     public void update(PromotionVol promotionVol) {
-        String query = "UPDATE promotion_vol SET vol_id = ?, type_siege_id = ?, taux_promotion = ?, date_debut = ?, date_fin = ? WHERE id = ?";
+        String query = "UPDATE promotion_vol SET vol_id = ?, type_siege_id = ?, taux_promotion = ?, date_debut = ?, date_fin = ?, est_active = ? WHERE id = ?";
         try (Connection connection = PostgresConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, promotionVol.getVol().getId());
@@ -75,7 +78,8 @@ public class PromotionVolDAO {
             statement.setDouble(3, promotionVol.getTauxPromotion());
             statement.setTimestamp(4, promotionVol.getDateDebut());
             statement.setTimestamp(5, promotionVol.getDateFin());
-            statement.setInt(6, promotionVol.getId());
+            statement.setBoolean(6, promotionVol.isEstActive());
+            statement.setInt(7, promotionVol.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

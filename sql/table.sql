@@ -65,6 +65,7 @@ CREATE TABLE promotion_vol (
     taux_promotion DECIMAL(5, 2) NOT NULL, 
     date_debut TIMESTAMP NOT NULL,
     date_fin TIMESTAMP NOT NULL,
+    est_active BOOLEAN DEFAULT TRUE, -- TRUE = Disponible, FALSE = Fin promo 
     UNIQUE(vol_id, type_siege_id)
 );
 

@@ -50,6 +50,13 @@
                         <label class="block text-gray-700">Date Fin</label>
                         <input type="datetime-local" name="dateFin" class="w-full p-2 border rounded" value="<%= promotion != null ? promotion.getDateFin().toString().replace(' ', 'T') : "" %>" >
                     </div>
+                    <div class="col-span-2">
+                        <label class="block text-gray-700 font-medium mb-2">Promotion Active</label>
+                        <input type="checkbox" name="estActive" value="true"
+                            <%= promotion != null && promotion.isEstActive() ? "checked" : "" %>>
+                        <span class="ml-2 text-sm text-gray-600">Activer cette promotion</span>
+                    </div>
+                    
                 </div>
                 <button type="submit" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded">Mettre à jour</button>
             </form>

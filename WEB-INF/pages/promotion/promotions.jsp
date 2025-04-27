@@ -120,6 +120,7 @@
                             <p class="text-red-500 text-sm mt-1"><%= request.getAttribute("dateFinError") %></p>
                         <% } %>
                     </div>
+
                 </div>
                 <button type="submit" class="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
                     <i class="fas fa-plus mr-2"></i>Ajouter
@@ -138,6 +139,7 @@
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase">Taux Promotion</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase">Date Début</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase">Date Fin</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase">Active</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase">Actions</th>
                     </tr>
                 </thead>
@@ -152,6 +154,9 @@
                                     <td class="px-6 py-4 text-sm text-gray-900"><%= promo.getTauxPromotion() %> %</td>
                                     <td class="px-6 py-4 text-sm text-gray-900"><%= promo.getDateDebut() %></td>
                                     <td class="px-6 py-4 text-sm text-gray-900"><%= promo.getDateFin() %></td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">
+                                        <%= promo.isEstActive() ? "Oui" : "Non" %>
+                                    </td>
                                     <td class="px-6 py-4 text-sm font-medium">
                                         <a href="${pageContext.request.contextPath}/promotions/edit?id=<%= promo.getId() %>" class="text-blue-600 hover:text-blue-900">
                                             <i class="fas fa-edit mr-2"></i>Configurer

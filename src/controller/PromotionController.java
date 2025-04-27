@@ -171,7 +171,8 @@ public class PromotionController {
         @Param(name = "typeSiegeId") int typeSiegeId,
         @Param(name = "tauxPromotion") String tauxPromotionStr,
         @Param(name = "dateDebut") String dateDebut,
-        @Param(name = "dateFin") String dateFin
+        @Param(name = "dateFin") String dateFin,
+        @Param(name = "estActive") String estActiveStr
     ) throws ParseException {
         ModelView mv = new ModelView();
         ValidationError validationError = new ValidationError();
@@ -223,6 +224,7 @@ public class PromotionController {
         Optional<PromotionVol> promotion = promotions.stream().filter(p -> p.getId() == id).findFirst();
         Optional<Vol> vol = vols.stream().filter(v -> v.getId() == volId).findFirst();
         Optional<TypeSiege> typeSiege = typesSiege.stream().filter(ts -> ts.getId() == typeSiegeId).findFirst();
+        boolean estActive = estActiveStr != null && !estActiveStr.trim().isEmpty();
 
         if (validationError.hasErrors()) {
             validationError.getFieldErrors().forEach((field, error) -> mv.add(field + "Error", error));
@@ -241,6 +243,7 @@ public class PromotionController {
             updatedPromotion.setTauxPromotion(tauxPromotion);
             updatedPromotion.setDateDebut(new java.sql.Timestamp(dDebut.getTime()));
             updatedPromotion.setDateFin(new java.sql.Timestamp(dFin.getTime()));
+            updatedPromotion.setEstActive(estActive);
 
             promotionVolDao.update(updatedPromotion);
             mv.add("successMessage", "La promotion a été mise à jour avec succès !");

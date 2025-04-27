@@ -122,23 +122,37 @@ EXECUTE FUNCTION verifier_heures_annulation();
 ---
 --  4. Fonction pour appliquer les promotions aux sièges 
 ---
+-- Fonction pour appliquer ou réinitialiser les promotions aux sièges
 CREATE OR REPLACE FUNCTION appliquer_promotion_siege()
 RETURNS TRIGGER AS $$
 BEGIN
-    UPDATE siege_vol sv
-    SET 
-        est_promotion = TRUE, 
-        taux_promotion = NEW.taux_promotion, 
-        prix_final = sv.prix_base * (1 - NEW.taux_promotion / 100) 
-    FROM siege s
-    JOIN avion_type_siege ats ON s.avion_type_siege_id = ats.id
-    WHERE sv.vol_id = NEW.vol_id 
-      AND ats.type_siege_id = NEW.type_siege_id 
-      AND sv.siege_id = s.id 
-      AND (SELECT date(date_depart) FROM vol WHERE id = NEW.vol_id) 
-          BETWEEN date(NEW.date_debut) AND date(NEW.date_fin);
+    -- Si la promotion est active (est_active = TRUE)
+    IF NEW.est_active = TRUE THEN
+        UPDATE siege_vol sv
+        SET est_promotion = TRUE,
+            taux_promotion = NEW.taux_promotion,
+            prix_final = sv.prix_base * (1 - NEW.taux_promotion / 100)
+        FROM siege s
+        JOIN avion_type_siege ats ON s.avion_type_siege_id = ats.id
+        WHERE sv.vol_id = NEW.vol_id
+          AND ats.type_siege_id = NEW.type_siege_id
+          AND sv.siege_id = s.id
+          AND (SELECT date(date_depart) FROM vol WHERE id = NEW.vol_id)
+              BETWEEN date(NEW.date_debut) AND date(NEW.date_fin);
+    ELSE
+        -- Si la promotion est inactive (est_active = FALSE), réinitialiser
+        UPDATE siege_vol sv
+        SET est_promotion = FALSE,
+            taux_promotion = 0,
+            prix_final = sv.prix_base
+        FROM siege s
+        JOIN avion_type_siege ats ON s.avion_type_siege_id = ats.id
+        WHERE sv.vol_id = NEW.vol_id
+          AND ats.type_siege_id = NEW.type_siege_id
+          AND sv.siege_id = s.id;
+    END IF;
 
-    RETURN NEW; 
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 

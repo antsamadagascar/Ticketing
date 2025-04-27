@@ -10,6 +10,7 @@ public class PromotionVol {
     private double tauxPromotion;
     private Timestamp dateDebut;
     private Timestamp dateFin;
+    private boolean estActive; 
 
     public int getId() {
         return id;
@@ -65,6 +66,14 @@ public class PromotionVol {
 
     public void setDateFin(Timestamp dateFin) {
         this.dateFin = dateFin;
+    }
+    
+    public boolean isEstActive() {
+        return estActive;
+    }
+    
+    public void setEstActive(boolean estActive) {
+        this.estActive = estActive;
     }
 
     public void setReduction(double reduction) {
