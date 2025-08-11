@@ -9,6 +9,10 @@ import models.TypeSiege;
 import models.Vol;
 import mg.itu.nyantsa.other.ModelView;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,6 +49,7 @@ public class PromotionController {
         
         return mv;
     }
+    
     @Url("/promotions/add")
     @Post
     public ModelView addPromotion(
@@ -52,7 +57,8 @@ public class PromotionController {
         @Param(name = "typeSiegeId") int typeSiegeId,
         @Param(name = "tauxPromotion") String tauxPromotionStr,  
         @Param(name = "dateDebut") String dateDebut,
-        @Param(name = "dateFin") String dateFin
+        @Param(name = "dateFin") String dateFin,
+        @Param(name = "nbrSiegePromo") int nbrSiegePromo
     ) throws ParseException {
         ModelView mv = new ModelView();
         ValidationError validationError = new ValidationError();
@@ -122,6 +128,7 @@ public class PromotionController {
             promotion.setTauxPromotion(tauxPromotion);
             promotion.setDateDebut(new java.sql.Timestamp(dDebut.getTime()));
             promotion.setDateFin(new java.sql.Timestamp(dFin.getTime()));
+            promotion.setNbrSiegePromo(nbrSiegePromo);
     
             promotionVolDao.add(promotion);
     
@@ -172,7 +179,8 @@ public class PromotionController {
         @Param(name = "tauxPromotion") String tauxPromotionStr,
         @Param(name = "dateDebut") String dateDebut,
         @Param(name = "dateFin") String dateFin,
-        @Param(name = "estActive") String estActiveStr
+        @Param(name = "estActive") String estActiveStr,
+        @Param(name = "nbrSiegePromo") int nbrSiegePromo
     ) throws ParseException {
         ModelView mv = new ModelView();
         ValidationError validationError = new ValidationError();
@@ -244,6 +252,7 @@ public class PromotionController {
             updatedPromotion.setDateDebut(new java.sql.Timestamp(dDebut.getTime()));
             updatedPromotion.setDateFin(new java.sql.Timestamp(dFin.getTime()));
             updatedPromotion.setEstActive(estActive);
+            updatedPromotion.setNbrSiegePromo(nbrSiegePromo);
 
             promotionVolDao.update(updatedPromotion);
             mv.add("successMessage", "La promotion a été mise à jour avec succès !");

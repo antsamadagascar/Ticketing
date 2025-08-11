@@ -66,6 +66,7 @@ CREATE TABLE promotion_vol (
     date_debut TIMESTAMP NOT NULL,
     date_fin TIMESTAMP NOT NULL,
     est_active BOOLEAN DEFAULT TRUE, -- TRUE = Disponible, FALSE = Fin promo 
+    nbr_siege_promo INT NOT NULL ,
     UNIQUE(vol_id, type_siege_id)
 );
 
@@ -90,7 +91,8 @@ CREATE TABLE reservation (
     date_reservation TIMESTAMP NOT NULL,
     statut BOOLEAN DEFAULT TRUE, 
     nombre_passager INTEGER DEFAULT 0 CHECK (nombre_passager >= 0),
-    montant_total DECIMAL(10, 2) NOT NULL CHECK (montant_total >= 0) DEFAULT 0
+    montant_total DECIMAL(10, 2) NOT NULL CHECK (montant_total >= 0) DEFAULT 0,
+    is_payer INT DEFAULT 0
 );
     
 CREATE TABLE passager (

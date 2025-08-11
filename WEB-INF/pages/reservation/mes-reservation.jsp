@@ -39,6 +39,7 @@
                 <th><i class="fas fa-plane-arrival"></i> Arrivée</th>
                 <th><i class="fas fa-users"></i> Passagers</th>
                 <th><i class="fas fa-info-circle"></i> Statut</th>
+                <th><i class="fas fa-info-circle"></i> Paiement</th>
                 <th><i class="fas fa-cogs"></i> Actions</th>
             </tr>
             <%
@@ -64,6 +65,19 @@
                         </span>
                     <% } %>
                 </td>
+                <td>
+                    <% if (r.getIsPayer() == 1) { %>
+                        <span class="status-confirmed">
+                            <i class="fas fa-check-circle"></i> Payé
+                        </span>
+                    <% } else { %>
+                        <span class="status-cancelled">
+                            <i class="fas fa-times-circle"></i> Non payé
+                        </span>
+                    <% } %>
+                </td>
+                
+
                 <td class="action-column">
                     <!-- Nouveau lien pour voir les passagers -->
                     <a href="/Ticketing/reservation/passagers?reservationId=<%= r.getId() %>&volId=<%= vol.getId() %>" class="passengers-btn" title="Voir les passagers">

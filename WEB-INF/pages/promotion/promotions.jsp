@@ -121,6 +121,15 @@
                         <% } %>
                     </div>
 
+                    <!-- Nombres de siege en promo -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Nombres sieges en promo </label>
+                        <input type="number" step="0.01" name="nbrSiegePromo" value="<%= request.getAttribute("nbrSiegePromo") != null ? request.getAttribute("nbrSiegePromo") : "" %>"
+                               class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 <%= request.getAttribute("tauxPromotionError") != null ? "border-red-500" : "" %>" min="0" max="100">
+                        <% if (request.getAttribute("nbrSiegePromoError") != null) { %>
+                            <p class="text-red-500 text-sm mt-1"><%= request.getAttribute("nbrSiegePromoError") %></p>
+                        <% } %>
+                    </div>
                 </div>
                 <button type="submit" class="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
                     <i class="fas fa-plus mr-2"></i>Ajouter
@@ -140,6 +149,7 @@
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase">Date Début</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase">Date Fin</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase">Active</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase">Nombres siège en promo</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase">Actions</th>
                     </tr>
                 </thead>
@@ -157,6 +167,7 @@
                                     <td class="px-6 py-4 text-sm text-gray-900">
                                         <%= promo.isEstActive() ? "Oui" : "Non" %>
                                     </td>
+                                    <td class="px-6 py-4 text-sm text-gray-900"><%= promo.getNbrSiegePromo() %></td>
                                     <td class="px-6 py-4 text-sm font-medium">
                                         <a href="${pageContext.request.contextPath}/promotions/edit?id=<%= promo.getId() %>" class="text-blue-600 hover:text-blue-900">
                                             <i class="fas fa-edit mr-2"></i>Configurer

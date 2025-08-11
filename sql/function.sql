@@ -128,17 +128,24 @@ RETURNS TRIGGER AS $$
 BEGIN
     -- Si la promotion est active (est_active = TRUE)
     IF NEW.est_active = TRUE THEN
+        -- Mettre à jour les sièges en utilisant une sous-requête pour limiter à nbr_siege_promo
         UPDATE siege_vol sv
         SET est_promotion = TRUE,
             taux_promotion = NEW.taux_promotion,
             prix_final = sv.prix_base * (1 - NEW.taux_promotion / 100)
-        FROM siege s
-        JOIN avion_type_siege ats ON s.avion_type_siege_id = ats.id
-        WHERE sv.vol_id = NEW.vol_id
-          AND ats.type_siege_id = NEW.type_siege_id
-          AND sv.siege_id = s.id
-          AND (SELECT date(date_depart) FROM vol WHERE id = NEW.vol_id)
-              BETWEEN date(NEW.date_debut) AND date(NEW.date_fin);
+        FROM (
+            SELECT sv2.id
+            FROM siege_vol sv2
+            JOIN siege s ON sv2.siege_id = s.id
+            JOIN avion_type_siege ats ON s.avion_type_siege_id = ats.id
+            WHERE sv2.vol_id = NEW.vol_id
+              AND ats.type_siege_id = NEW.type_siege_id
+              AND sv2.est_promotion = FALSE
+              AND (SELECT date(date_depart) FROM vol WHERE id = NEW.vol_id)
+                  BETWEEN date(NEW.date_debut) AND date(NEW.date_fin)
+            LIMIT NEW.nbr_siege_promo
+        ) AS sub
+        WHERE sv.id = sub.id;
     ELSE
         -- Si la promotion est inactive (est_active = FALSE), réinitialiser
         UPDATE siege_vol sv

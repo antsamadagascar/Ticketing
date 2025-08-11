@@ -56,7 +56,10 @@
                             <%= promotion != null && promotion.isEstActive() ? "checked" : "" %>>
                         <span class="ml-2 text-sm text-gray-600">Activer cette promotion</span>
                     </div>
-                    
+                    <div>
+                        <label class="block text-gray-700">Nombres siege Promotion</label>
+                        <input type="number" step="0.01" name="nbrSiegePromo" class="w-full p-2 border rounded" value="<%= promotion != null ? promotion.getNbrSiegePromo() : "" %>" >
+                    </div>
                 </div>
                 <button type="submit" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded">Mettre à jour</button>
             </form>

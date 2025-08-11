@@ -25,6 +25,7 @@ public class ReservationDao {
                 reservation.setMontantTotal(rs.getDouble("montant_total"));
                 reservation.setDateReservation(rs.getTimestamp("date_reservation"));
                 reservation.setStatut(rs.getBoolean("statut_reservation"));
+                reservation.setIsPayer(rs.getInt("is_payer"));
                 
                 Utilisateur utilisateur = new Utilisateur();
                 utilisateur.setId(rs.getInt("id"));
@@ -62,6 +63,7 @@ public class ReservationDao {
                     reservation.setDateReservation(rs.getTimestamp("date_reservation"));
                     reservation.setStatut(rs.getBoolean("statut_reservation"));
                     reservation.setNombrePassager(rs.getInt("nombre_passager"));
+                    reservation.setIsPayer(rs.getInt("is_payer"));
 
                     Utilisateur utilisateur = new Utilisateur();
                     utilisateur.setId(rs.getInt("id"));

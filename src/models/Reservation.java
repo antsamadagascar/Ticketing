@@ -15,14 +15,23 @@ public class Reservation {
     private Double montantTotal;
     private FileUpload passFileUpload;
     private List<Passager> passagers;
+    private int isPayer;
 
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
+
+    public int getIsPayer() {
+        return isPayer;
+    }
+
+    public void setIsPayer(int isPayer) {
+        this.isPayer = isPayer;
+    }
+
 
     public Utilisateur getUtilisateur() {
         return utilisateur;

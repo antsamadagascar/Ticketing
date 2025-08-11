@@ -18,6 +18,7 @@ SELECT
     r.date_reservation,
     r.statut AS statut_reservation,
     r.nombre_passager,
+    r.is_payer,
     STRING_AGG(DISTINCT p.nom || ' ' || p.prenom, ', ') AS liste_passagers,
     STRING_AGG(DISTINCT s.numero, ', ') AS liste_sieges
 FROM
@@ -42,7 +43,7 @@ WHERE
     r.statut IS TRUE
 GROUP BY
     r.id, u.id, u.nom, u.prenom, u.email, v.id, v.numero_vol, v.date_depart, v.date_arrivee,
-    vd.nom, va.nom, r.montant_total, r.date_reservation, r.statut, r.nombre_passager;
+    vd.nom, va.nom, r.montant_total, r.date_reservation, r.statut, r.nombre_passager,r.is_payer;
 
 
 ---

@@ -11,6 +11,7 @@ public class PromotionVol {
     private Timestamp dateDebut;
     private Timestamp dateFin;
     private boolean estActive; 
+    private int nbrSiegePromo;
 
     public int getId() {
         return id;
@@ -79,5 +80,13 @@ public class PromotionVol {
     public void setReduction(double reduction) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'setReduction'");
+    }
+
+    public void setNbrSiegePromo(int nbrSiegePromo) {
+        this.nbrSiegePromo = nbrSiegePromo;
+    }
+
+    public int getNbrSiegePromo() {
+        return nbrSiegePromo;
     }
 }
