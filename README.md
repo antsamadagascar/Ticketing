@@ -1,4 +1,4 @@
-# Application Web Java Servlet
+# Application Web Java Servlet (jsp)
 
 ## Description
 Cette application web est construite en utilisant des **servlets Java** et nécessite **Apache Tomcat 10.1.15**, **Java 19.0.2**, et une base de données **PostgreSQL** pour fonctionner correctement.
