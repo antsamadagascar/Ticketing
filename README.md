@@ -11,7 +11,7 @@ Avant de lancer l'application, assurez-vous que les éléments suivants sont ins
   Téléchargez et installez [Apache Tomcat 10.1.15](https://tomcat.apache.org/download-10.cgi).
   
 - **Java 19.0.2**  
-  Vous pouvez télécharger la dernière version de Java depuis [Oracle JDK](https://www.oracle.com/java/technologies/javase/jdk19-archive-downloads.html) ou utiliser un gestionnaire de version comme [SDKMAN!](https://sdkman.io/) pour l'installer.
+  Vous pouvez télécharger la dernière version de Java depuis [Oracle JDK](https://www.oracle.com/java/technologies/javase/jdk19-archive-downloads.html) 
 
 - **PostgreSQL**  
   Téléchargez et installez [PostgreSQL](https://www.postgresql.org/download/). Assurez-vous que le serveur PostgreSQL est en cours d'exécution.
